@@ -487,7 +487,6 @@
     flex: 1;
     min-width: 300px;
 }
-
 </style>
 </body>
 </html>
