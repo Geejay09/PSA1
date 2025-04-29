@@ -36,6 +36,8 @@ $conn->close();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -114,46 +116,60 @@ $conn->close();
       <i class="bi bi-question-lg"></i>
   </button> 
 
-    <?php if (!empty($stock_no)): ?>
-        <h4>Stock Number: <strong><?= htmlspecialchars($stock_no) ?></strong></h4>
-        <?php if (!empty($data)): ?>
-            <table id="stockCardTable" class="table table-bordered table-striped">
-                <thead class="table-primary">
-                    <tr>
-                    <th>Stock No.</th>
-                    <th>item</th>
-                    <th>Description</th>
-                    <th>Unit</th>
-                    <th>Date</th>
-                    <th>Reference</th>
-                    <th>Issue Qty</th>
-                    <th>Balance Qty</th>
-                    <th>Office</th>
-                </thead>
-                <tbody>
-                    <?php foreach ($data as $row): ?>
-                        <tr>
-                        <td><?= htmlspecialchars($row['stock_no']) ?></td>
-                        <td><?= htmlspecialchars($row['item']) ?></td>
-                        <td><?= htmlspecialchars($row['dscrtn']) ?></td>
-                        <td><?= htmlspecialchars($row['unit']) ?></td>
-                        <td><?= htmlspecialchars($row['date']) ?></td>
-                        <td><?= htmlspecialchars($row['ref']) ?></td>
-                        <td><?= (int)$row['issue_qty'] ?></td>
-                        <td><?= (int)$row['balance_qty'] ?></td>
-                        <td><?= htmlspecialchars($row['office']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <button onclick="exportStockCardToExcel('<?php echo $stock_no; ?>')">Export to Excel</button>
+  <?php if (!empty($stock_no)): ?>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="card custom-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Stock Card - Stock Number: <?= htmlspecialchars($stock_no) ?></h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($data)): ?>
+                    <div class="table-responsive">
+                        <table id="stockCardTable" class="table table-bordered table-striped text-center">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Stock No.</th>
+                                    <th>Item</th>
+                                    <th>Description</th>
+                                    <th>Unit</th>
+                                    <th>Date</th>
+                                    <th>Reference</th>
+                                    <th>Issue Qty</th>
+                                    <th>Balance Qty</th>
+                                    <th>Office</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($data as $row): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($row['stock_no']) ?></td>
+                                        <td><?= htmlspecialchars($row['item']) ?></td>
+                                        <td><?= htmlspecialchars($row['dscrtn']) ?></td>
+                                        <td><?= htmlspecialchars($row['unit']) ?></td>
+                                        <td><?= htmlspecialchars($row['date']) ?></td>
+                                        <td><?= htmlspecialchars($row['ref']) ?></td>
+                                        <td><?= (int)$row['issue_qty'] ?></td>
+                                        <td><?= (int)$row['balance_qty'] ?></td>
+                                        <td><?= htmlspecialchars($row['office']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button class="btn btn-success" onclick="exportStockCardToExcel('<?= $stock_no ?>')">
+                            <i class="bi bi-file-earmark-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-warning mb-0">No entries found for stock number <strong><?= htmlspecialchars($stock_no) ?></strong>.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 
-
-        <?php else: ?>
-            <div class="alert alert-warning">No entries found for stock number <strong><?= htmlspecialchars($stock_no) ?></strong>.</div>
-        <?php endif; ?>
-    <?php endif; ?>
         </div>
 </body>
 
@@ -317,8 +333,8 @@ function confirmLogout() {
 
 <style>
 body {
-    font-family: 'Segoe UI', sans-serif;
-        background-color: #f0f2f5;
+    font-family: 'Poppins', sans-serif;
+    background-color:rgb(11, 26, 48);
         color: #333;
   }
 
@@ -350,6 +366,10 @@ body {
         font-weight: 700;
         color: #fff;
   }
+  h2 {
+    font-family: 'Cal Sans', sans-serif;
+    color: white;
+}
 
   .sidebar {
         width: 280px;
@@ -412,8 +432,10 @@ body {
 }
 
 .main-content {
-    margin-left: 25px;
-    padding: 30px;
+    flex: 1;
+    padding: 20px 10px; /* Reduced side padding */
+    overflow-y: auto;
+    margin-left: 30px;
 }
         
 h2 {
@@ -423,8 +445,9 @@ h2 {
     margin-bottom: 20px;
 }
 .search-bar {
-    max-width: 400px;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px; /* Slightly wider search */
+    margin: 0 auto 20px;
 }
 
 #helpBtn {
@@ -453,5 +476,37 @@ h2 {
         box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff;
     }
 }
+.custom-card {
+    max-width: none; /* Remove max-width restriction */
+    width: 98%; /* Use almost full width */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0 5px; /* Small padding to prevent touching edges */
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    table-layout: auto; /* Allow columns to adjust based on content */
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 5px; /* More compact cell padding */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}
+
     </style>
 </html>
