@@ -1,0 +1,102 @@
+<?php
+// Turn on error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// DB Connection
+$host = "localhost";
+$user = "root";
+$pass = "";
+$dbname = "dbpsa";
+
+$conn = new mysqli($host, $user, $pass, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get form inputs
+$item = $_POST['item'];
+$dscrtn = $_POST['dscrtn'];
+$unit = $_POST['unit'];
+$stock_no = $_POST['stock_no'];
+$fund = $_POST['fund']; // user input
+$entity = "Philippine Statistics Authority"; // static value
+
+$dates = $_POST['date'];
+$refs = $_POST['ref'];
+$receipts = $_POST['receipt_qty'];
+$issues = $_POST['issue_qty'];
+$offices = $_POST['office'];
+$balances = $_POST['balance_qty'];
+$no_days = $_POST['no_days'];
+
+$hasError = false;
+$errorMsg = '';
+
+// Loop through each row
+for ($i = 0; $i < count($dates); $i++) {
+    $stmt = $conn->prepare("INSERT INTO tbl_sc (
+        item, dscrtn, unit, stock_no, date, ref, receipt_qty,
+        issue_qty, office, balance_qty, no_days, entity, fund
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    if (!$stmt) {
+        $hasError = true;
+        $errorMsg = "Prepare failed: " . $conn->error;
+        break;
+    }
+
+    $stmt->bind_param("sssssssississ",
+        $item,
+        $dscrtn,
+        $unit,
+        $stock_no,
+        $dates[$i],
+        $refs[$i],
+        $receipts[$i],
+        $issues[$i],
+        $offices[$i],
+        $balances[$i],
+        $no_days[$i],
+        $entity,
+        $fund
+    );
+
+    if (!$stmt->execute()) {
+        $hasError = true;
+        $errorMsg = "Execute failed on row " . ($i + 1) . ": " . $stmt->error;
+        break;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+
+if ($hasError) {
+    echo "<h3 style='color:red;'>Error occurred: $errorMsg</h3>";
+    echo "<a href='stockcard.php'>← Back to Stock Card</a>";
+} else {
+    echo '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Success</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Stock card data has been saved successfully.",
+                confirmButtonText: "OK"
+            }).then(() => {
+                window.location.href = "stock_card.php";
+            });
+        </script>
+    </body>
+    </html>';
+}
+?>
