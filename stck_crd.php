@@ -119,7 +119,7 @@ $conn->close();
   <?php if (!empty($stock_no)): ?>
     <div class="d-flex justify-content-center mt-4">
         <div class="card custom-card">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header text-white">
                 <h5 class="mb-0">Stock Card - Stock Number: <?= htmlspecialchars($stock_no) ?></h5>
             </div>
             <div class="card-body">
@@ -476,6 +476,11 @@ h2 {
         box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff;
     }
 }
+.card-header{
+    background: linear-gradient(to right,rgb(11, 3, 87),rgb(4, 33, 126));
+    
+}
+
 .custom-card {
     max-width: none; /* Remove max-width restriction */
     width: 98%; /* Use almost full width */
