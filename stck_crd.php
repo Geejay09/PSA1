@@ -238,14 +238,13 @@ $conn->close();
     // Insert static row for Balance Forwarded at row 9
     ws['A9'] = { v: '01/01/2025', t: "s", s: normalCenter };
     ws['B9'] = { v: 'Balance Forwarded', t: "s", s: normalLeft };
-    ws['G9'] = { v: itemInfo?.initial_qty || 0, t: "n", s: normalCenter };  // Optional: or hardcode a value like 21
-    ws['I9'] = { v: '', t: "s", s: normalCenter };  // Optional
+    ws['G9'] = { v: itemInfo?.initial_qty || 0, t: "n", s: normalCenter };
+    ws['I9'] = { v: '', t: "s", s: normalCenter };  // Blank value for No. of Days to Consume
 
-// Now insert dynamic data starting from row 10
-for (let i = 0; i < rows.length; i++) {
-    const entry = rows[i];
-    const row = i + 10;
-
+    // Now insert dynamic data starting from row 10
+    for (let i = 0; i < rows.length; i++) {
+        const entry = rows[i];
+        const row = i + 10;
 
         ws[`A${row}`] = { v: entry.date || '', t: "s", s: normalCenter };
         ws[`B${row}`] = { v: entry.ref || '', t: "s", s: normalCenter };
@@ -253,7 +252,7 @@ for (let i = 0; i < rows.length; i++) {
         ws[`E${row}`] = { v: entry.issue_qty || '', t: "n", s: normalCenter };
         ws[`F${row}`] = { v: entry.office || '', t: "s", s: normalCenter };
         ws[`G${row}`] = { v: entry.balance_qty || '', t: "n", s: normalCenter };
-        ws[`I${row}`] = { v: entry.no_days || '', t: "n", s: normalCenter };
+        ws[`I${row}`] = { v: '', t: "s", s: normalCenter };  // Blank value for No. of Days to Consume
     }
 
     const totalRows = rows.length + 9;  // One extra row for the static entry

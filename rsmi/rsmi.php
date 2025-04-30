@@ -30,10 +30,19 @@ if (isset($_POST['export_excel'])) {
     ";
     $result = $conn->query($query);
     
-    // Group rows by ris_no
+    // Group rows by ris_no and calculate stock summary
     $grouped = [];
+    $stock_summary = [];
+    $grand_total_qty = 0;
     while ($row = $result->fetch_assoc()) {
         $grouped[$row['ris_no']][] = $row;
+        
+        // Add to stock summary
+        if (!isset($stock_summary[$row['stock_no']])) {
+            $stock_summary[$row['stock_no']] = 0;
+        }
+        $stock_summary[$row['stock_no']] += $row['qty'];
+        $grand_total_qty += $row['qty'];
     }
     
     echo "<table border='1'>";
@@ -55,6 +64,26 @@ if (isset($_POST['export_excel'])) {
     }
     
     echo "</table>";
+    
+    // Add summary table to Excel export
+    echo "<br><br><table border='1'>";
+    echo "<tr><th colspan='2'>Recapitulation</th></tr>";
+    echo "<tr><th>Stock No.</th><th>Quantity</th></tr>";
+    
+    foreach ($stock_summary as $stock_no => $total_qty) {
+        echo "<tr>";
+        echo "<td>".$stock_no."</td>";
+        echo "<td>".$total_qty."</td>";
+        echo "</tr>";
+    }
+    
+    // Add total row to Excel export
+    echo "<tr style='font-weight:bold;'>";
+    echo "<td>Total</td>";
+    echo "<td>".$grand_total_qty."</td>";
+    echo "</tr>";
+    
+    echo "</table>";
     exit();
 }
 
@@ -69,12 +98,20 @@ $query = "
 ";
 $result = $conn->query($query);
 
-// Group rows by ris_no and calculate grand total
+// Group rows by ris_no and calculate grand total AND stock summary
 $grouped = [];
 $grand_total_qty = 0;
+$stock_summary = []; // New array for stock number summary
+
 while ($row = $result->fetch_assoc()) {
     $grouped[$row['ris_no']][] = $row;
     $grand_total_qty += $row['qty'];
+    
+    // Add to stock summary
+    if (!isset($stock_summary[$row['stock_no']])) {
+        $stock_summary[$row['stock_no']] = 0;
+    }
+    $stock_summary[$row['stock_no']] += $row['qty'];
 }
 ?>
 
@@ -169,7 +206,7 @@ while ($row = $result->fetch_assoc()) {
                             <table class="table table-bordered fixed-table">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>RCC</th>
+                                        <th>Responsibility Center Code</th>
                                         <th>Stock No.</th>
                                         <th>Item</th>
                                         <th>Unit</th>
@@ -197,6 +234,32 @@ while ($row = $result->fetch_assoc()) {
                     
                     <div class="grand-total">
                         Grand Total Quantity: <?= $grand_total_qty ?>
+                    </div>
+
+                    <!-- Summary Table -->
+                    <div class="summary-table">
+                        <h5>Recapitulation</h5>
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Stock No.</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($stock_summary as $stock_no => $total_qty): ?>
+                                <tr>
+                                    <td><?= $stock_no ?></td>
+                                    <td><?= $total_qty ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <!-- Add total row -->
+                                <tr style="font-weight:bold; background-color:#f1f5f9;">
+                                    <td>Total</td>
+                                    <td><?= $grand_total_qty ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="text-center mt-4">
@@ -512,6 +575,45 @@ while ($row = $result->fetch_assoc()) {
             font-weight: bold;
         }
 
+        /* Summary Table Styles */
+        .summary-table {
+            margin-top: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .summary-table h5 {
+            color: #1a237e;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .summary-table table {
+            width: 50%;
+            margin: 0 auto;
+            table-layout: fixed;
+        }
+
+        .summary-table th {
+            background-color: #f1f5f9 !important;
+        }
+
+        .summary-table th:nth-child(1) {
+            width: 60%;
+        }
+
+        .summary-table th:nth-child(2) {
+            width: 40%;
+        }
+
+        .summary-table tr:last-child {
+            background-color: #f1f5f9;
+            font-weight: bold;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 992px) {
             .sidebar {
@@ -535,6 +637,10 @@ while ($row = $result->fetch_assoc()) {
             .main-content {
                 margin-left: 0;
                 margin-top: 0;
+            }
+            
+            .summary-table table {
+                width: 100%;
             }
         }
     </style>
