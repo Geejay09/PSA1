@@ -15,8 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
-    <div class="container-fluid p-0">
+<div class="container-fluid p-0">
         <div class="psa-header d-flex align-items-center border-bottom px-4 py-3">
           <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo mr-3">
         
