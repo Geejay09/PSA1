@@ -89,122 +89,124 @@ while ($row = $result->fetch_assoc()) {
     
 </head>
 <body>
-    <!-- Header - EXACTLY FROM REFERENCE -->
-    <div class="psa-header d-flex align-items-center border-bottom px-4 py-3">
-        <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo mr-3">
+    <!-- Header -->
+    <div class="psa-header">
+        <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo">
         <div>
             <div class="psa-small">REPUBLIC OF THE PHILIPPINES</div>
             <div class="psa-main">PHILIPPINE STATISTICS AUTHORITY - QUIRINO PROVINCIAL OFFICE</div>
         </div>
     </div>
 
-    <!-- Sidebar - Now fixed position -->
-    <div class="sidebar">
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-speedometer2 icon-spacing"></i> Dashboard
-        </button>
-
-        <h5>Data Entry</h5>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> Requisition and Issuance Slip
-        </button>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> Inspection and Acceptance Report
-        </button>
-
-        <h5>Generate Report</h5>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Card
-        </button>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Ledger Card
-        </button>
-        <button class="btn btn-block sidebar-btn active">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> RSMI Report
-        </button>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-file-earmark-text icon-spacing"></i> Physical Count Report
-        </button>
-
-        <h5>Utilities</h5>
-        <button class="btn btn-block sidebar-btn">
-            <i class="bi bi-people icon-spacing"></i> Manage Employees
-        </button>
-
-        <!-- Logout - EXACTLY FROM REFERENCE -->
-        <form id="logoutForm" class="d-flex justify-content-center mt-5" method="post">
-            <input type="hidden" name="logout" value="1">
-            <button type="button" class="btn logout-btn rounded-pill px-4 sidebar-btn">
-                <i class="bi bi-box-arrow-right icon-spacing"></i> LOGOUT
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="btn btn-block sidebar-btn" onclick="location.href='../home.php'">
+                <i class="bi bi-speedometer2 icon-spacing"></i> Dashboard
             </button>
-        </form>
-    </div>
 
-    <!-- Main Content with RSMI Form -->
-    <div class="main-content">
-        <form method="POST">
-            <h4 class="form-title">REPORT OF SUPPLIES AND MATERIALS ISSUED</h4>
-            
-            <div class="form-details">
-                <div>
-                    <div class="mb-2"><strong>Entity Name:</strong> Philippine Statistics Authority</div>
-                    <div class="mb-2"><strong>Fund Cluster:</strong> Regular Fund</div>
-                </div>
+            <h5>Data Entry</h5>
+            <button class="btn btn-block sidebar-btn" onclick="location.href='../ris/ris.php'">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Requisition and Issuance Slip
+            </button>
+            <button class="btn btn-block sidebar-btn" onclick="location.href='../iar/iar.php'">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Inspection and Acceptance Report
+            </button>
+
+            <h5>Generate Report</h5>
+            <button class="btn btn-block sidebar-btn" onclick="location.href='../stck_crd.php'">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Card
+            </button>
+            <button class="btn btn-block sidebar-btn">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Ledger Card
+            </button>
+            <button class="btn btn-block sidebar-btn active" onclick="location.href='../rsmi/rsmi.php'">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Report of Supplies and Materials Issued
+            </button>
+            <button class="btn btn-block sidebar-btn">
+                <i class="bi bi-file-earmark-text icon-spacing"></i> Report on the Physical Count of Inventories
+            </button>
+
+            <h5>Utilities</h5>
+            <button class="btn btn-block sidebar-btn">
+                <i class="bi bi-people icon-spacing"></i> Manage Employee List
+            </button>
+
+            <!-- Logout -->
+            <form id="logoutForm" class="d-flex justify-content-center mt-5" method="post">
+                <input type="hidden" name="logout" value="1">
+                <button type="button" class="btn logout-btn rounded-pill px-4 sidebar-btn">
+                    <i class="bi bi-box-arrow-right icon-spacing"></i> LOGOUT
+                </button>
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <form method="POST">
+                <h4 class="form-title">REPORT OF SUPPLIES AND MATERIALS ISSUED</h4>
                 
-                <div>
-                    <div class="mb-2 serial-no-input">
-                        <strong>Serial No:</strong> <input type="text" name="serial_no" required>
+                <div class="form-details">
+                    <div>
+                        <div class="mb-2"><strong>Entity Name:</strong> Philippine Statistics Authority</div>
+                        <div class="mb-2"><strong>Fund Cluster:</strong> Regular Fund</div>
                     </div>
-                    <div class="mb-2"><strong>Date:</strong> <?= date("F j, Y") ?></div>
+                    
+                    <div>
+                        <div class="mb-2 serial-no-input">
+                            <strong>Serial No:</strong> <input type="text" name="serial_no" required>
+                        </div>
+                        <div class="mb-2"><strong>Date:</strong> <?= date("F j, Y") ?></div>
+                    </div>
                 </div>
-            </div>
 
-            <?php if (empty($grouped)): ?>
-                <div class="alert alert-info">No RIS entries found for today (<?= $today ?>).</div>
-            <?php else: ?>
-                <?php foreach ($grouped as $ris_no => $items): ?>
-                    <div class="section-title">RIS No: <?= $ris_no ?></div>
-                    <div class="table-container">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
+                <?php if (empty($grouped)): ?>
+                    <div class="alert alert-info">No RIS entries found for today (<?= $today ?>).</div>
+                <?php else: ?>
+                    <?php foreach ($grouped as $ris_no => $items): ?>
+                        <div class="section-title">RIS No: <?= $ris_no ?></div>
+                        <div class="table-container">
+                            <table class="table table-bordered fixed-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>RCC</th>
+                                        <th>Stock No.</th>
+                                        <th>Item</th>
+                                        <th>Unit</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Cost</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($items as $row): ?>
                                 <tr>
-                                    <th>RCC</th>
-                                    <th>Stock No.</th>
-                                    <th>Item</th>
-                                    <th>Unit</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Cost</th>
-                                    <th>Amount</th>
+                                    <td><?= $row['rcc'] ?></td>
+                                    <td><?= $row['stock_no'] ?></td>
+                                    <td><?= htmlspecialchars($row['item']) ?> <?= !empty($row['des']) ? htmlspecialchars($row['des']).'' : '' ?></td>
+                                    <td><?= $row['unit'] ?></td>
+                                    <td><?= $row['qty'] ?></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($items as $row): ?>
-                            <tr>
-                                <td><?= $row['rcc'] ?></td>
-                                <td><?= $row['stock_no'] ?></td>
-                                <td><?= htmlspecialchars($row['item']) ?>(item) <?= !empty($row['des']) ? htmlspecialchars($row['des']).'(des)' : '' ?></td>
-                                <td><?= $row['unit'] ?></td>
-                                <td><?= $row['qty'] ?></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endforeach; ?>
+                    
+                    <div class="grand-total">
+                        Grand Total Quantity: <?= $grand_total_qty ?>
                     </div>
-                <?php endforeach; ?>
-                
-                <div class="grand-total">
-                    Grand Total Quantity: <?= $grand_total_qty ?>
-                </div>
 
-                <div class="text-center mt-4">
-                    <button type="submit" name="export_excel" class="btn btn-success">
-                        <i class="bi bi-file-excel"></i> Export to Excel
-                    </button>
-                </div>
-            <?php endif; ?>
-        </form>
+                    <div class="text-center mt-4">
+                        <button type="submit" name="export_excel" class="btn btn-success">
+                            <i class="bi bi-file-excel"></i> Export to Excel
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -255,25 +257,33 @@ while ($row = $result->fetch_assoc()) {
 <style>
         /* EXACT SIDEBAR STYLES FROM REFERENCE */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color:rgb(11, 26, 48);
+            font-family: 'Poppins', sans-serif;
+            background-color: rgb(11, 26, 48);
             color: #333;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+        }
+
+        .content-wrapper {
+        display: flex;
+        min-height: 100vh;
         }
 
         .psa-header {
             background-color: rgb(4, 33, 65);
             color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-family: 'Times New Roman', Times, serif;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            height: 80px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid white;
+            padding: 10px 20px;
+            height: 100px;
         }
 
         .psa-small, .psa-main {
@@ -283,6 +293,7 @@ while ($row = $result->fetch_assoc()) {
         .psa-logo {
             height: 60px;
             width: auto;
+            margin-right: 20px;
         }
 
         .psa-small {
@@ -299,19 +310,19 @@ while ($row = $result->fetch_assoc()) {
         }
 
         .sidebar {
-            width: 280px;
-            background: linear-gradient(to bottom, #1f2a40, #141c2b);
-            color: #ffffff;
-            padding: 20px;
-            position: fixed;
-            top: 80px; /* Below header */
-            bottom: 0;
-            left: 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgb(255, 255, 255);
-            backdrop-filter: blur(10px);
-            border-radius: 0;
-            overflow-y: auto; /* Allow sidebar to scroll if content is too tall */
+        width: 280px;
+        background: linear-gradient(to bottom, #1f2a40, #141c2b);
+        color: #ffffff;
+        padding: 20px;
+        height: calc(100vh - 100px); /* Subtract header height */
+        position: fixed;
+        top: 100px; /* Match header height */
+        left: 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgb(255, 255, 255);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        overflow-y: auto;
         }
 
         .sidebar h5 {
@@ -320,6 +331,7 @@ while ($row = $result->fetch_assoc()) {
             color: #a5c9ff;
             border-bottom: 1px solid #32425c;
             padding-bottom: 5px;
+            margin-bottom: 15px;
             margin-bottom: 15px;
         }
 
@@ -334,13 +346,13 @@ while ($row = $result->fetch_assoc()) {
             margin-bottom: 10px;
             box-shadow: 0 4px 6px rgba(180, 180, 180, 0.2);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
+            
         }
 
         .sidebar .btn:hover {
             background-color: #3e4d6c;
             color: #ffffff;
-            transform: scale(1.05);
+            transform: scale(1.02);
             box-shadow: 0 4px 12px rgba(207, 204, 204, 0.1);
         }
 
@@ -349,6 +361,7 @@ while ($row = $result->fetch_assoc()) {
             border: 1px solid #ff4d4f;
             color: #ff4d4f;
             transition: all 0.3s ease-in-out;
+            text-align: center;
         }
 
         .logout-btn:hover {
@@ -379,13 +392,15 @@ while ($row = $result->fetch_assoc()) {
             }
         }
 
-        /* RSMI Form Styles */
+        /* Main Content Styles */
         .main-content {
-            margin-left: 280px;
-            margin-top: 80px; /* Below header */
-            padding: 20px;
-            background-color: #f8f9fa;
-            min-height: calc(100vh - 80px);
+        flex: 1;
+        margin-left: 280px;
+        padding: 30px;
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 100px); /* Subtract header height */
+        margin-top: 100px; /* Match header height */
+        overflow-y: auto;
         }
 
         .form-title {
@@ -393,12 +408,17 @@ while ($row = $result->fetch_assoc()) {
             font-weight: bold;
             margin-bottom: 25px;
             text-align: center;
+            font-size: 1.8rem;
         }
 
         .form-details {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .serial-no-input input {
@@ -415,6 +435,64 @@ while ($row = $result->fetch_assoc()) {
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             padding: 15px;
             margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        /* Fixed table layout with consistent column widths */
+        .fixed-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .fixed-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .fixed-table thead th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Fixed column widths */
+        .fixed-table th:nth-child(1),
+        .fixed-table td:nth-child(1) {
+            width: 10%; /* RCC */
+        }
+        
+        .fixed-table th:nth-child(2),
+        .fixed-table td:nth-child(2) {
+            width: 15%; /* Stock No */
+        }
+        
+        .fixed-table th:nth-child(3),
+        .fixed-table td:nth-child(3) {
+            width: 35%; /* Item */
+            word-wrap: break-word;
+        }
+        
+        .fixed-table th:nth-child(4),
+        .fixed-table td:nth-child(4) {
+            width: 10%; /* Unit */
+        }
+        
+        .fixed-table th:nth-child(5),
+        .fixed-table td:nth-child(5) {
+            width: 10%; /* Quantity */
+        }
+        
+        .fixed-table th:nth-child(6),
+        .fixed-table td:nth-child(6) {
+            width: 10%; /* Unit Cost */
+        }
+        
+        .fixed-table th:nth-child(7),
+        .fixed-table td:nth-child(7) {
+            width: 10%; /* Amount */
         }
 
         .section-title {
@@ -432,6 +510,32 @@ while ($row = $result->fetch_assoc()) {
             display: inline-block;
             margin-top: 20px;
             font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-radius: 0;
+            }
+            .main-content {
+                margin-left: 0;
+                margin-top: 0;
+            }
         }
     </style>
 </html>

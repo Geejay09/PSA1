@@ -282,7 +282,7 @@ document.getElementById('helpBtn').addEventListener('click', () => {
   }
 
   .psa-header {
-    background-color: rgb(21, 83, 150);
+        background-color: rgb(4, 33, 65);
         color: white;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         font-family: 'Times New Roman', Times, serif;
