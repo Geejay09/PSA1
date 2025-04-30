@@ -82,8 +82,8 @@ $conn->close();
     <button class="btn btn-block sidebar-btn">
         <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Ledger Card
     </button>
-    <button class="btn btn-block sidebar-btn">
-        <i class="bi bi-file-earmark-bar-graph icon-spacing"></i> Report of Supplies and Materials Issued
+    <button class="btn btn-block sidebar-btn" onclick="location.href='rsmi/rsmi.php'">
+        <i class="bi bi-file-earmark-text icon-spacing"></i> Requisition and Issuance Slip
     </button>
     <button class="btn btn-block sidebar-btn">
         <i class="bi bi-file-earmark-text icon-spacing"></i> Report on the Physical Count of Inventories
