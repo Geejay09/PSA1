@@ -451,7 +451,7 @@
 
     /* Sidebar Styles */
     .sidebar {
-        width: 280px;
+        width: 491px;
         background: linear-gradient(180deg, #0a192f 0%, #172a45 100%);
         padding: 1.5rem;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -529,7 +529,7 @@
         background-color: rgb(255, 255, 255);
         border-radius: 12px;
         padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(119, 99, 99, 0.17);
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }

@@ -86,7 +86,7 @@
 
         <!-- Main Content -->
         <main class="main-content flex-grow-1 p-4 bg-white">
-            <div class="content-card p-4">
+            <div class="content-card p-">
                 <h2 class="text-center mb-4 text-primary">INSPECTION AND ACCEPTANCE REPORT</h2>
                 
                 <!-- Form Section -->
@@ -416,7 +416,6 @@
     .psa-logo {
         height: 60px;
         width: auto;
-        filter: brightness(0) invert(1);
     }
 
     .psa-small {
@@ -435,7 +434,7 @@
 
     /* Sidebar Styles */
     .sidebar {
-        width: 280px;
+        width: 630px;
         background: linear-gradient(180deg, #0a192f 0%, #172a45 100%);
         padding: 1.5rem;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -513,7 +512,7 @@
         background-color: white;
         border-radius: 12px;
         padding: 2rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(255, 0, 0, 0.1);
     }
 
     /* Table Styles */
