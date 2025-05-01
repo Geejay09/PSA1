@@ -464,7 +464,7 @@ if (!isset($_SESSION['logged_in'])) {
             transition: all 0.3s ease;
             box-shadow: 2px 0 15px rgba(0,0,0,0.1);
             border-right: 1px solid rgba(100, 255, 218, 0.1);
-            width: 250px;
+            width: 438px;
         }
         
         .sidebar-title {
