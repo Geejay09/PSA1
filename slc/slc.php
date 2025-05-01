@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+if (!isset($_SESSION['logged_in'])) {
+    header("Location: ../index.php");
     exit();
 }
 ?>
@@ -47,6 +47,21 @@ if (!isset($_SESSION['username'])) {
     <div class="d-flex">
         <!-- Sidebar -->
         <nav class="sidebar d-flex flex-column p-3">
+            <!-- User Profile -->
+            <div class="d-flex align-items-center mb-4 p-3 rounded user-profile">
+                <div class="me-3">
+                    <i class="bi bi-person-circle fs-3" style="color: var(--accent-color);"></i>
+                </div>
+                <div>
+                    <div class="fw-medium" style="color: white; font-family: 'Montserrat', sans-serif;">
+                        <?php echo htmlspecialchars($_SESSION['first_name'] ?? 'User'); ?>
+                    </div>
+                    <small style="color: rgba(255,255,255,0.6); font-family: 'Roboto', sans-serif;">
+                        <?php echo htmlspecialchars($_SESSION['position'] ?? 'Position'); ?>
+                    </small>
+                </div>
+            </div>
+
             <!-- Dashboard Button -->
             <button class="btn sidebar-btn mb-2" onclick="location.href='../home.php'">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
@@ -290,6 +305,19 @@ if (!isset($_SESSION['username'])) {
         .sidebar-btn i {
             transition: all 0.3s ease;
             color: rgba(255,255,255,0.7);
+        }
+
+        /* User Profile */
+        .user-profile {
+            background: rgba(100, 255, 218, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         /* Main Content */

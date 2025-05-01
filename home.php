@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['logged_in'])) {
     header("Location: index.php");
     exit();
 }
@@ -21,7 +21,6 @@ if (!isset($_SESSION['username'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
 </head>
 <body>
 
@@ -54,8 +53,12 @@ if (!isset($_SESSION['username'])) {
                     <i class="bi bi-person-circle fs-3" style="color: var(--accent-color);"></i>
                 </div>
                 <div>
-                    <div class="fw-medium" style="color: white; font-family: 'Montserrat', sans-serif;"><?php echo $_SESSION['username']; ?></div>
-                    <small style="color: rgba(255,255,255,0.6); font-family: 'Roboto', sans-serif;">Administrator</small>
+                    <div class="fw-medium" style="color: white; font-family: 'Montserrat', sans-serif;">
+                        <?php echo htmlspecialchars($_SESSION['first_name'] ?? 'User'); ?>
+                    </div>
+                    <small style="color: rgba(255,255,255,0.6); font-family: 'Roboto', sans-serif;">
+                        <?php echo htmlspecialchars($_SESSION['position'] ?? 'Position'); ?>
+                    </small>
                 </div>
             </div>
 
@@ -150,7 +153,7 @@ if (!isset($_SESSION['username'])) {
             color: 'white'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'index.php';
+                window.location.href = 'logout.php'; // Changed to logout.php for proper session destruction
             }
         });
     });
