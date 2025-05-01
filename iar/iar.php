@@ -400,7 +400,7 @@ if (!isset($_SESSION['logged_in'])) {
             cancelButtonColor: '#6c757d'
         }).then(result => {
             if (result.isConfirmed) {
-                window.location.href = '../logout.php';
+                window.location.href = '../index.php';
             }
         });
     });

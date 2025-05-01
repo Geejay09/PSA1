@@ -160,7 +160,7 @@ if (!isset($_SESSION['logged_in'])) {
             confirmButtonText: 'Yes, logout'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'logout.php';
+                window.location.href = '../index.php';
             }
         });
     });

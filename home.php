@@ -153,7 +153,7 @@ if (!isset($_SESSION['logged_in'])) {
             color: 'white'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'logout.php'; // Changed to logout.php for proper session destruction
+                window.location.href = 'index.php'; // Changed to logout.php for proper session destruction
             }
         });
     });

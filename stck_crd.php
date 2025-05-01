@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 if (!isset($_SESSION['logged_in'])) {
     header("Location: index.php");
@@ -364,7 +363,8 @@ $conn->close();
         });
     });
 
-    function confirmLogout() {
+   // Confirm logout
+   document.getElementById('logoutBtn').addEventListener('click', function() {
         Swal.fire({
             title: 'Are you sure you want to logout?',
             icon: 'warning',
@@ -378,7 +378,7 @@ $conn->close();
                 window.location.href = 'index.php';
             }
         });
-    }
+    });
 
     // Add active class to clicked sidebar button
     document.querySelectorAll('.sidebar-btn').forEach(button => {
