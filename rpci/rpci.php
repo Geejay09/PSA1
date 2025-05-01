@@ -33,6 +33,14 @@ if (!isset($_SESSION['username'])) {
             <div class="psa-main" style="font-size: 1.3rem;">PHILIPPINE STATISTICS AUTHORITY</div>
             <div class="psa-sub" style="font-size: 0.85rem;">Quirino Provincial Office</div>
         </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <span class="header-time">
+                <i class="bi bi-calendar3 me-2"></i><?php echo date('F j, Y'); ?>
+            </span>
+            <span class="header-time">
+                <i class="bi bi-clock me-2"></i><span id="currentTime"></span>
+            </span>
+        </div>
     </header>
 
     <!-- Body -->
@@ -379,6 +387,15 @@ if (!isset($_SESSION['username'])) {
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
             margin-bottom: 30px;
+        }
+
+        .header-time {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.8);
+            background: rgba(100, 255, 218, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
         }
         
         /* Responsive */

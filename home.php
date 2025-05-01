@@ -161,12 +161,8 @@ if (!isset($_SESSION['username'])) {
             title: 'Help Center',
             html: `
                 <div class="text-start" style="color: var(--text-dark);">
-                    <p style="font-family: 'Roboto', sans-serif;">For assistance with the system, please contact:</p>
-                    <ul style="font-family: 'Roboto', sans-serif;">
-                        <li>IT Support: itsupport@psa.gov.ph</li>
-                        <li>Admin Office: admin@psa.gov.ph</li>
-                    </ul>
-                    <p style="font-family: 'Roboto', sans-serif;">Or visit our <a href="codes.html" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
+                    <p style="font-family: 'Roboto', sans-serif;">Need assistance for stock code?</p>
+                    <p style="font-family: 'Roboto', sans-serif;">Click Here <a href="codes.html" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
                 </div>
             `,
             icon: 'info',
