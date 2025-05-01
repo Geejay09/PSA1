@@ -119,528 +119,539 @@ while ($row = $result->fetch_assoc()) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RSMI Form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report of Supplies and Materials Issued</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
 </head>
 <body>
+
+<div class="container-fluid p-0">
     <!-- Header -->
-    <div class="psa-header">
-        <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo">
+    <header class="psa-header d-flex align-items-center px-4 py-3">
+        <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo me-3" style="height: 50px;">
         <div>
-            <div class="psa-small">REPUBLIC OF THE PHILIPPINES</div>
-            <div class="psa-main">PHILIPPINE STATISTICS AUTHORITY - QUIRINO PROVINCIAL OFFICE</div>
+            <div class="text-uppercase small" style="color: rgba(255,255,255,0.6); letter-spacing: 1px; font-size: 0.7rem;">REPUBLIC OF THE PHILIPPINES</div>
+            <div class="psa-main" style="font-size: 1.3rem;">PHILIPPINE STATISTICS AUTHORITY</div>
+            <div class="psa-sub" style="font-size: 0.85rem;">Quirino Provincial Office</div>
         </div>
-    </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <span class="header-time">
+                <i class="bi bi-calendar3 me-2"></i><?php echo date('F j, Y'); ?>
+            </span>
+            <span class="header-time">
+                <i class="bi bi-clock me-2"></i><span id="currentTime"></span>
+            </span>
+        </div>
+    </header>
 
-    <div class="content-wrapper">
+    <!-- Body -->
+    <div class="d-flex">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <button class="btn btn-block sidebar-btn" onclick="location.href='../home.php'">
-                <i class="bi bi-speedometer2 icon-spacing"></i> Dashboard
+        <nav class="sidebar d-flex flex-column p-3">
+            <!-- Dashboard Button -->
+            <button class="btn sidebar-btn mb-2" onclick="location.href='../home.php'">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </button>
 
-            <h5>Data Entry</h5>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='../ris/ris.php'">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Requisition and Issuance Slip
-            </button>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='../iar/iar.php'">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Inspection and Acceptance Report
-            </button>
+            <!-- Data Entry Section -->
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../ris/ris.php'">
+                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Slip
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
+                    <i class="bi bi-clipboard-check me-2"></i> Inspection Report
+                </button>
+            </div>
 
-            <h5>Generate Report</h5>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='../stck_crd.php'">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Card
-            </button>
-            <button class="btn btn-block sidebar-btn">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Stock Ledger Card
-            </button>
-            <button class="btn btn-block sidebar-btn active" onclick="location.href='../rsmi/rsmi.php'">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Report of Supplies and Materials Issued
-            </button>
-            <button class="btn btn-block sidebar-btn">
-                <i class="bi bi-file-earmark-text icon-spacing"></i> Report on the Physical Count of Inventories
-            </button>
+            <!-- Reports Section -->
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Reports</div>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../stck_crd.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Stock Card
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger
+                </button>
+                <button class="btn sidebar-btn mb-1 active" onclick="location.href='../rsmi/rsmi.php'">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RSMI Report
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Physical Count
+                </button>
+            </div>
 
-            <h5>Utilities</h5>
-            <button class="btn btn-block sidebar-btn">
-                <i class="bi bi-people icon-spacing"></i> Manage Employee List
-            </button>
+            <!-- Utilities Section -->
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
+                <button class="btn sidebar-btn mb-1">
+                    <i class="bi bi-people me-2"></i> Employee List
+                </button>
+            </div>
+
+            <!-- Spacer -->
+            <div class="mt-auto"></div>
 
             <!-- Logout -->
-            <form id="logoutForm" class="d-flex justify-content-center mt-5" method="post">
-                <input type="hidden" name="logout" value="1">
-                <button type="button" class="btn logout-btn rounded-pill px-4 sidebar-btn">
-                    <i class="bi bi-box-arrow-right icon-spacing"></i> LOGOUT
-                </button>
-            </form>
-        </div>
+            <button id="logoutBtn" class="btn btn-outline-accent mt-3">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
+        </nav>
 
         <!-- Main Content -->
-        <div class="main-content">
-            <form method="POST">
-                <h4 class="form-title">REPORT OF SUPPLIES AND MATERIALS ISSUED</h4>
+        <main class="main-content flex-grow-1 p-4">
+            <div class="content-card">
+                <h2 class="text-center mb-4 page-title">REPORT OF SUPPLIES AND MATERIALS ISSUED</h2>
                 
-                <div class="form-details">
-                    <div>
-                        <div class="mb-2"><strong>Entity Name:</strong> Philippine Statistics Authority</div>
-                        <div class="mb-2"><strong>Fund Cluster:</strong> Regular Fund</div>
-                    </div>
-                    
-                    <div>
-                        <div class="mb-2 serial-no-input">
-                            <strong>Serial No:</strong> <input type="text" name="serial_no" required>
+                <!-- Search Form -->
+                <form method="POST">
+                    <div class="form-details">
+                        <div>
+                            <div class="mb-2"><strong>Entity Name:</strong> Philippine Statistics Authority</div>
+                            <div class="mb-2"><strong>Fund Cluster:</strong> Regular Fund</div>
                         </div>
-                        <div class="mb-2"><strong>Date:</strong> <?= date("F j, Y") ?></div>
+                        
+                        <div>
+                            <div class="mb-2">
+                                <strong>Serial No:</strong> 
+                                <input type="text" name="serial_no" class="form-control" style="display: inline-block; width: auto;">
+                            </div>
+                            <div class="mb-2"><strong>Date:</strong> <?= date("F j, Y") ?></div>
+                        </div>
                     </div>
-                </div>
 
-                <?php if (empty($grouped)): ?>
-                    <div class="alert alert-info">No RIS entries found for today (<?= $today ?>).</div>
-                <?php else: ?>
-                    <?php foreach ($grouped as $ris_no => $items): ?>
-                        <div class="section-title">RIS No: <?= $ris_no ?></div>
-                        <div class="table-container">
-                            <table class="table table-bordered fixed-table">
-                                <thead class="table-light">
+                    <?php if (empty($grouped)): ?>
+                        <div class="alert alert-info">No RIS entries found for today (<?= $today ?>).</div>
+                    <?php else: ?>
+                        <?php foreach ($grouped as $ris_no => $items): ?>
+                            <div class="section-title">RIS No: <?= $ris_no ?></div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Responsibility Center Code</th>
+                                            <th>Stock No.</th>
+                                            <th>Item</th>
+                                            <th>Unit</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Cost</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($items as $row): ?>
                                     <tr>
-                                        <th>Responsibility Center Code</th>
+                                        <td><?= $row['rcc'] ?></td>
+                                        <td><?= $row['stock_no'] ?></td>
+                                        <td><?= htmlspecialchars($row['item']) ?> <?= !empty($row['des']) ? htmlspecialchars($row['des']).'' : '' ?></td>
+                                        <td><?= $row['unit'] ?></td>
+                                        <td><?= $row['qty'] ?></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endforeach; ?>
+                        
+                        <div class="grand-total">
+                            Grand Total Quantity: <?= $grand_total_qty ?>
+                        </div>
+
+                        <!-- Summary Table -->
+                        <div class="summary-table">
+                            <h5>Recapitulation</h5>
+                            <table class="table table-bordered" style="width: 50%; margin: 0 auto;">
+                                <thead>
+                                    <tr>
                                         <th>Stock No.</th>
-                                        <th>Item</th>
-                                        <th>Unit</th>
                                         <th>Quantity</th>
-                                        <th>Unit Cost</th>
-                                        <th>Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($items as $row): ?>
-                                <tr>
-                                    <td><?= $row['rcc'] ?></td>
-                                    <td><?= $row['stock_no'] ?></td>
-                                    <td><?= htmlspecialchars($row['item']) ?> <?= !empty($row['des']) ? htmlspecialchars($row['des']).'' : '' ?></td>
-                                    <td><?= $row['unit'] ?></td>
-                                    <td><?= $row['qty'] ?></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <?php endforeach; ?>
+                                    <?php foreach ($stock_summary as $stock_no => $total_qty): ?>
+                                    <tr>
+                                        <td><?= $stock_no ?></td>
+                                        <td><?= $total_qty ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    <!-- Add total row -->
+                                    <tr style="font-weight:bold; background-color:#f1f5f9;">
+                                        <td>Total</td>
+                                        <td><?= $grand_total_qty ?></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
-                    <?php endforeach; ?>
-                    
-                    <div class="grand-total">
-                        Grand Total Quantity: <?= $grand_total_qty ?>
-                    </div>
 
-                    <!-- Summary Table -->
-                    <div class="summary-table">
-                        <h5>Recapitulation</h5>
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Stock No.</th>
-                                    <th>Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($stock_summary as $stock_no => $total_qty): ?>
-                                <tr>
-                                    <td><?= $stock_no ?></td>
-                                    <td><?= $total_qty ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                                <!-- Add total row -->
-                                <tr style="font-weight:bold; background-color:#f1f5f9;">
-                                    <td>Total</td>
-                                    <td><?= $grand_total_qty ?></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button type="submit" name="export_excel" class="btn btn-success">
-                            <i class="bi bi-file-excel"></i> Export to Excel
-                        </button>
-                    </div>
-                <?php endif; ?>
-            </form>
-        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" name="export_excel" class="btn btn-accent">
+                                <i class="bi bi-file-excel me-2"></i> Export to Excel
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </form>
+            </div>
+        </main>
     </div>
+</div>
 
-    <script>
-        // EXACT SCRIPT FROM REFERENCE
-        document.querySelector('.logout-btn').addEventListener('click', () => {
-            Swal.fire({
-                title: 'Are you sure you want to logout?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, logout',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('logoutForm').submit();
-                }
-            });
-        });
+<!-- Floating Help Button -->
+<button id="helpBtn" class="btn help-btn rounded-circle position-fixed" style="bottom: 20px; right: 20px;">
+    <i class="bi bi-question-lg"></i>
+</button>
 
-        const sidebarButtons = document.querySelectorAll('.sidebar-btn');
-
-        sidebarButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                sidebarButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    </script>
-
-    <?php
-    if (isset($_POST['logout'])) {
-        session_destroy();
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Logged out!',
-                text: 'You have been logged out successfully.',
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                window.location.href = '../index.php';
-            });
-        </script>";
-        exit();
+<script>
+    // Update current time
+    function updateTime() {
+        const now = new Date();
+        const timeElement = document.getElementById('currentTime');
+        timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
     }
-    ?>
+    
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, logout',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: 'var(--accent-color)',
+            cancelButtonColor: '#6c757d'
+        }).then(result => {
+            if (result.isConfirmed) {
+                window.location.href = '../index.php';
+            }
+        });
+    });
+
+    document.getElementById('helpBtn').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Need Help?',
+            html: `
+                <p>View the full code guide <a href="../codes.html" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
+            `,
+            icon: 'info',
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: 'var(--accent-color)'
+        });
+    });
+
+    // Add active class to clicked sidebar button
+    document.querySelectorAll('.sidebar-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+        });
+    });
+</script>
 </body>
-
 <style>
-        /* EXACT SIDEBAR STYLES FROM REFERENCE */
+        :root {
+            --primary-dark: #0a192f;
+            --primary-blue: #172a45;
+            --accent-color: #64ffda;
+            --light-bg: #f8f9fa;
+            --text-light: #ccd6f6;
+            --text-dark: #1a1a1a;
+        }
+        
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: rgb(11, 26, 48);
-            color: #333;
-            margin: 0;
-            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
-
-        .content-wrapper {
-        display: flex;
-        min-height: 100vh;
-        }
-
+        
+        /* Header Styles */
         .psa-header {
-            background-color: rgb(4, 33, 65);
+            background: var(--primary-dark);
+            height: 80px;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        .psa-main {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             color: white;
-            font-family: 'Times New Roman', Times, serif;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid white;
-            padding: 10px 20px;
-            height: 100px;
         }
-
-        .psa-small, .psa-main {
-            font-family: 'Times New Roman', Times, serif;
+        
+        .psa-sub {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.7);
         }
-
-        .psa-logo {
-            height: 60px;
-            width: auto;
-            margin-right: 20px;
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--primary-blue);
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(100, 255, 218, 0.1);
+            width: 250px;
         }
-
-        .psa-small {
-            font-size: 1rem;
+        
+        .sidebar-title {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 4px;
+            padding: 10px 15px;
+            text-decoration: none;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            border: 1px solid transparent;
+            background: none;
+        }
+        
+        .sidebar-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateX(5px);
+            color: var(--accent-color);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+        
+        .sidebar-btn:hover i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn.active {
+            background-color: rgba(100, 255, 218, 0.1);
+            font-weight: 500;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+        
+        .sidebar-btn.active i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn i {
+            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            background: white;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: none;
+            padding: 2rem;
+        }
+        
+        /* Form Elements */
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
+        }
+        
+        /* Buttons */
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .btn-accent:hover {
+            background-color: rgba(100, 255, 218, 0.8);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+        }
+        
+        .btn-outline-accent {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+        
+        .btn-outline-accent:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
+        }
+        
+        /* Table Styles */
+        .table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 500;
             text-transform: uppercase;
-            color: #dbeafe;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
-
-        .psa-main {
-            font-size: 2.1rem;
-            font-weight: 700;
-            color: #fff;
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(100, 255, 218, 0.05);
         }
-
-        .sidebar {
-        width: 280px;
-        background: linear-gradient(to bottom, #1f2a40, #141c2b);
-        color: #ffffff;
-        padding: 20px;
-        height: calc(100vh - 100px); /* Subtract header height */
-        position: fixed;
-        top: 100px; /* Match header height */
-        left: 0;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgb(255, 255, 255);
-        backdrop-filter: blur(10px);
-        border-radius: 10px;
-        overflow-y: auto;
-        }
-
-        .sidebar h5 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #a5c9ff;
-            border-bottom: 1px solid #32425c;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .sidebar .btn {
-            background-color: #2b3a55;
-            color: #dbeafe;
-            border: none;
-            text-align: left;
-            padding: 10px 15px;
-            font-weight: 500;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 6px rgba(180, 180, 180, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            
-        }
-
-        .sidebar .btn:hover {
-            background-color: #3e4d6c;
-            color: #ffffff;
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(207, 204, 204, 0.1);
-        }
-
-        .logout-btn {
-            background-color: transparent;
-            border: 1px solid #ff4d4f;
-            color: #ff4d4f;
-            transition: all 0.3s ease-in-out;
-            text-align: center;
-        }
-
-        .logout-btn:hover {
-            background-color: #ff4d4f;
-            color: white;
-        }
-
-        .icon-spacing {
-            margin-right: 10px;
-            font-size: 1.2rem;
-            vertical-align: middle;
-        }
-
-        .sidebar-btn.active {
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff;
-            background-color: #3e4d6c;
-            color: #ffffff;
-            animation: glow 1.5s infinite alternate;
-        }
-
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
-            }
-            to {
-                box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff;
-            }
-        }
-
-        /* Main Content Styles */
-        .main-content {
-        flex: 1;
-        margin-left: 280px;
-        padding: 30px;
-        background-color: #f8f9fa;
-        min-height: calc(100vh - 100px); /* Subtract header height */
-        margin-top: 100px; /* Match header height */
-        overflow-y: auto;
-        }
-
-        .form-title {
-            color: #1a237e;
-            font-weight: bold;
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 1.8rem;
-        }
-
-        .form-details {
+        
+        /* Help Button */
+        .help-btn {
+            background: var(--primary-dark);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            width: 50px;
+            height: 50px;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .serial-no-input input {
-            border: none;
-            border-bottom: 1px solid #333;
-            padding: 0 5px;
-            width: 200px;
-            text-align: center;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            padding: 15px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
-
-        /* Fixed table layout with consistent column widths */
-        .fixed-table {
-            table-layout: fixed;
-            width: 100%;
-            border-collapse: collapse;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
         
-        .fixed-table thead {
-            position: sticky;
-            top: 0;
-            z-index: 10;
+        .help-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-dark);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
         }
         
-        .fixed-table thead th {
-            background-color: #f8f9fa;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        /* Fixed column widths */
-        .fixed-table th:nth-child(1),
-        .fixed-table td:nth-child(1) {
-            width: 10%; /* RCC */
+        /* Page Title */
+        .page-title {
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
         
-        .fixed-table th:nth-child(2),
-        .fixed-table td:nth-child(2) {
-            width: 15%; /* Stock No */
-        }
-        
-        .fixed-table th:nth-child(3),
-        .fixed-table td:nth-child(3) {
-            width: 35%; /* Item */
-            word-wrap: break-word;
-        }
-        
-        .fixed-table th:nth-child(4),
-        .fixed-table td:nth-child(4) {
-            width: 10%; /* Unit */
-        }
-        
-        .fixed-table th:nth-child(5),
-        .fixed-table td:nth-child(5) {
-            width: 10%; /* Quantity */
-        }
-        
-        .fixed-table th:nth-child(6),
-        .fixed-table td:nth-child(6) {
-            width: 10%; /* Unit Cost */
-        }
-        
-        .fixed-table th:nth-child(7),
-        .fixed-table td:nth-child(7) {
-            width: 10%; /* Amount */
-        }
-
+        /* Section Styles */
         .section-title {
-            background-color: #f1f5f9;
+            background-color: rgba(100, 255, 218, 0.1);
             padding: 8px 15px;
             border-radius: 4px;
             margin: 20px 0 10px 0;
             font-weight: bold;
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
         }
-
+        
         .grand-total {
-            background-color: #e3f2fd;
+            background-color: rgba(100, 255, 218, 0.1);
             padding: 10px 20px;
             border-radius: 4px;
             display: inline-block;
             margin-top: 20px;
             font-weight: bold;
+            color: var(--primary-dark);
+            border: 1px solid var(--accent-color);
         }
-
-        /* Summary Table Styles */
+        
+        /* Form Details */
+        .form-details {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        /* Summary Table */
         .summary-table {
             margin-top: 30px;
             background: white;
             padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
+        
         .summary-table h5 {
-            color: #1a237e;
-            font-weight: bold;
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
             margin-bottom: 15px;
             text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
         }
 
-        .summary-table table {
-            width: 50%;
-            margin: 0 auto;
-            table-layout: fixed;
+        .header-time {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.8);
+            background: rgba(100, 255, 218, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
         }
-
-        .summary-table th {
-            background-color: #f1f5f9 !important;
-        }
-
-        .summary-table th:nth-child(1) {
-            width: 60%;
-        }
-
-        .summary-table th:nth-child(2) {
-            width: 40%;
-        }
-
-        .summary-table tr:last-child {
-            background-color: #f1f5f9;
-            font-weight: bold;
-        }
-
-        /* Responsive adjustments */
+        
+        /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
-                width: 250px;
+                width: 220px;
+                position: fixed;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
             }
-            .main-content {
-                margin-left: 250px;
+            
+            .sidebar.show {
+                transform: translateX(0);
             }
-        }
-
-        @media (max-width: 768px) {
-            .content-wrapper {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                position: relative;
-                height: auto;
-                border-radius: 0;
-            }
+            
             .main-content {
                 margin-left: 0;
-                margin-top: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .psa-header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .form-details {
+                flex-direction: column;
             }
             
             .summary-table table {
-                width: 100%;
+                width: 100% !important;
             }
         }
     </style>

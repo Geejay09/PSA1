@@ -40,102 +40,115 @@ $conn->close();
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Excel Export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
 </head>
-<body class="bg-dark-blue">
+<body>
 
 <div class="container-fluid p-0">
     <!-- Header -->
     <header class="psa-header d-flex align-items-center px-4 py-3">
-        <img src="assets/psa.png" alt="PSA Logo" class="psa-logo me-3">
+        <img src="assets/psa.png" alt="PSA Logo" class="psa-logo me-3" style="height: 50px;">
         <div>
-            <div class="psa-small">REPUBLIC OF THE PHILIPPINES</div>
-            <div class="psa-main">PHILIPPINE STATISTICS AUTHORITY - QUIRINO PROVINCIAL OFFICE</div>
+            <div class="text-uppercase small" style="color: rgba(255,255,255,0.6); letter-spacing: 1px; font-size: 0.7rem;">REPUBLIC OF THE PHILIPPINES</div>
+            <div class="psa-main" style="font-size: 1.3rem;">PHILIPPINE STATISTICS AUTHORITY</div>
+            <div class="psa-sub" style="font-size: 0.85rem;">Quirino Provincial Office</div>
+        </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <span class="header-time">
+                <i class="bi bi-calendar3 me-2"></i><?php echo date('F j, Y'); ?>
+            </span>
+            <span class="header-time">
+                <i class="bi bi-clock me-2"></i><span id="currentTime"></span>
+            </span>
         </div>
     </header>
 
     <!-- Body -->
-    <div class="d-flex" style="min-height: calc(100vh - 80px);">
-        <!-- Sidebar - Matches first design -->
-        <nav class="sidebar d-flex flex-column" style="width: 280px; background: linear-gradient(to bottom, #1f2a40, #141c2b); color: #ffffff; padding: 20px; border-right: 1px solid rgb(255, 255, 255);">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar d-flex flex-column p-3">
             <!-- Dashboard Button -->
-            <button class="btn btn-block sidebar-btn mb-3" onclick="location.href='home.php'" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
+            <button class="btn sidebar-btn mb-2" onclick="location.href='home.php'">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </button>
 
             <!-- Data Entry Section -->
-            <h5 style="font-size: 1rem; font-weight: 600; color: #a5c9ff; border-bottom: 1px solid #32425c; padding-bottom: 5px; margin-bottom: 15px;">Data Entry</h5>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='ris/ris.php'" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-file-earmark-text me-2"></i> Requisition and Issuance Slip
-            </button>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='iar/iar.php'" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-clipboard-check me-2"></i> Inspection and Acceptance Report
-            </button>
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='ris/ris.php'">
+                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Slip
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='iar/iar.php'">
+                    <i class="bi bi-clipboard-check me-2"></i> Inspection Report
+                </button>
+            </div>
 
-            <!-- Generate Report Section -->
-            <h5 style="font-size: 1rem; font-weight: 600; color: #a5c9ff; border-bottom: 1px solid #32425c; padding-bottom: 5px; margin-bottom: 15px;">Generate Report</h5>
-            <button class="btn btn-block sidebar-btn active" onclick="location.href='stck_crd.php'" style="background-color: #3e4d6c; color: #ffffff; border: 2px solid #ffffff; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-card-checklist me-2"></i> Stock Card
-            </button>
-            <button class="btn btn-block sidebar-btn" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-journal-text me-2"></i> Stock Ledger Card
-            </button>
-            <button class="btn btn-block sidebar-btn" onclick="location.href='rsmi/rsmi.php'" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-file-earmark-spreadsheet me-2"></i> Requisition and Issuance Slip
-            </button>
-            <button class="btn btn-block sidebar-btn" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-clipboard-data me-2"></i> Physical Count Report
-            </button>
+            <!-- Reports Section -->
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Reports</div>
+                <button class="btn sidebar-btn mb-1 active" onclick="location.href='stck_crd.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Stock Card
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='slc/slc.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='rsmi/rsmi.php'">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RIS Report
+                </button>
+                <button class="btn sidebar-btn mb-1" onclick="location.href='rpci/rpci.php'">
+                    <i class="bi bi-card-checklist me-2"></i> Physical Count
+                </button>
+            </div>
 
             <!-- Utilities Section -->
-            <h5 style="font-size: 1rem; font-weight: 600; color: #a5c9ff; border-bottom: 1px solid #32425c; padding-bottom: 5px; margin-bottom: 15px;">Utilities</h5>
-            <button class="btn btn-block sidebar-btn" style="background-color: #2b3a55; color: #dbeafe; border: none; text-align: left; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-                <i class="bi bi-people me-2"></i> Manage Employee List
-            </button>
+            <div class="mb-3">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
+                <button class="btn sidebar-btn mb-1">
+                    <i class="bi bi-people me-2"></i> Employee List
+                </button>
+            </div>
 
-            <!-- Spacer to push logout to bottom -->
+            <!-- Spacer -->
             <div class="mt-auto"></div>
 
             <!-- Logout -->
-            <form id="logoutForm" class="d-flex justify-content-center mt-5" method="post">
-                <input type="hidden" name="logout" value="1">
-                <button type="button" class="btn logout-btn w-100" style="background-color: transparent; border: 1px solid #ff4d4f; color: #ff4d4f; padding: 10px 15px; border-radius: 50px;" onclick="confirmLogout()">
-                    <i class="bi bi-box-arrow-right me-2"></i> LOGOUT
-                </button>
-            </form>
+            <button id="logoutBtn" class="btn btn-outline-accent mt-3">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
         </nav>
 
         <!-- Main Content -->
         <main class="main-content flex-grow-1 p-4">
-            <div class="content-card p-4">
-                <h2 class="text-center mb-4 text-light-blue">STOCK CARD</h2>
+            <div class="content-card">
+                <h2 class="text-center mb-4 page-title">STOCK CARD</h2>
                 
                 <!-- Search Form -->
-                <form method="GET" class="search-bar mb-4">
+                <form method="GET" class="mb-4">
                     <div class="input-group">
-                        <input type="text" name="stock_no" class="form-control bg-dark-input" placeholder="Enter stock number..." value="<?= htmlspecialchars($stock_no) ?>" required>
-                        <button class="btn btn-primary" type="submit">
+                        <input type="text" name="stock_no" class="form-control" placeholder="Enter stock number..." value="<?= htmlspecialchars($stock_no) ?>" required>
+                        <button class="btn btn-accent" type="submit">
                             <i class="bi bi-search me-2"></i> Search
                         </button>
                     </div>
                 </form>
 
                 <?php if (!empty($stock_no)): ?>
-                    <div class="card shadow-lg border-0">
-                        <div class="card-header bg-blue-dark text-white">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
                             <h5 class="mb-0">Stock Card - Stock Number: <?= htmlspecialchars($stock_no) ?></h5>
                         </div>
-                        <div class="card-body bg-dark-content">
+                        <div class="card-body">
                             <?php if (!empty($data)): ?>
                                 <div class="table-responsive">
-                                    <table id="stockCardTable" class="table table-dark table-hover align-middle">
-                                        <thead class="bg-blue-dark">
+                                    <table id="stockCardTable" class="table table-bordered table-hover align-middle">
+                                        <thead>
                                             <tr>
                                                 <th>Stock No.</th>
                                                 <th>Item</th>
@@ -166,7 +179,7 @@ $conn->close();
                                     </table>
                                 </div>
                                 <div class="text-end mt-3">
-                                    <button class="btn btn-success" onclick="exportStockCardToExcel('<?= $stock_no ?>')">
+                                    <button class="btn btn-accent" onclick="exportStockCardToExcel('<?= $stock_no ?>')">
                                         <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
                                     </button>
                                 </div>
@@ -182,11 +195,21 @@ $conn->close();
 </div>
 
 <!-- Floating Help Button -->
-<button id="helpBtn" class="btn btn-primary rounded-circle floating-help-btn" title="Need help?">
+<button id="helpBtn" class="btn help-btn rounded-circle position-fixed" style="bottom: 20px; right: 20px;">
     <i class="bi bi-question-lg"></i>
 </button>
 
 <script>
+    // Update current time
+    function updateTime() {
+        const now = new Date();
+        const timeElement = document.getElementById('currentTime');
+        timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+    }
+    
+    setInterval(updateTime, 1000);
+    updateTime();
+
     async function exportStockCardToExcel(stock_no) {
         const response = await fetch('fetch_stock_card.php?stock_no=' + stock_no);
         const stockData = await response.json();
@@ -311,11 +334,11 @@ $conn->close();
         Swal.fire({
             title: 'Need Help?',
             html: `
-                <p>View the full code guide <a href="codes.html" target="_blank" style="color: #0d6efd; text-decoration: underline;">here</a>.</p>
+                <p>View the full code guide <a href="codes.html" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
             `,
             icon: 'info',
             confirmButtonText: 'Got it!',
-            confirmButtonColor: '#0d6efd'
+            confirmButtonColor: 'var(--accent-color)'
         });
     });
 
@@ -326,7 +349,7 @@ $conn->close();
             showCancelButton: true,
             confirmButtonText: 'Yes, logout',
             cancelButtonText: 'Cancel',
-            confirmButtonColor: '#0d6efd',
+            confirmButtonColor: 'var(--accent-color)',
             cancelButtonColor: '#6c757d'
         }).then(result => {
             if (result.isConfirmed) {
@@ -345,247 +368,252 @@ $conn->close();
         });
     });
 </script>
-
+</body>
 <style>
-    :root {
-        --dark-blue: #0a192f;
-        --medium-blue: #172a45;
-        --blue-dark: #1a365d;
-        --light-blue: #64ffda;
-        --white: #ffffff;
-        --text-light: #ccd6f6;
-        --text-lighter: #a8b2d1;
-        --dark-input: #1e2b48;
-        --dark-content: #1a2a4a;
-    }
-
-    body {
-        font-family: 'Montserrat', sans-serif;
-        background-color: var(--dark-blue);
-        color: var(--text-light);
-    }
-
-    .bg-dark-blue {
-        background-color: var(--dark-blue);
-    }
-
-    .bg-blue-dark {
-        background-color: var(--blue-dark);
-    }
-
-    .bg-dark-input {
-        background-color: var(--dark-input);
-        color: var(--text-light);
-        border: 1px solid #2d3a5a;
-    }
-
-    .bg-dark-input:focus {
-        background-color: var(--dark-input);
-        color: var(--text-light);
-        border-color: var(--light-blue);
-        box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
-    }
-
-    .bg-dark-content {
-        background-color: var(--dark-content);
-    }
-
-    .text-light-blue {
-        color: var(--light-blue);
-    }
-
-    /* Header Styles */
-    .psa-header {
-        background: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
-        color: var(--white);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .psa-logo {
-        height: 60px;
-        width: auto;
-        filter: brightness(0) invert(1);
-    }
-
-    .psa-small {
-        font-size: 0.9rem;
-        font-weight: 500;
-        letter-spacing: 1px;
-        color: var(--text-lighter);
-    }
-
-    .psa-main {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--white);
-    }
-
-    /* Sidebar Styles */
-    .sidebar {
-        width: 280px;
-        background: linear-gradient(to bottom, #1f2a40, #141c2b);
-        color: #ffffff;
-        padding: 20px;
-        border-right: 1px solid rgb(255, 255, 255);
-    }
-
-    .sidebar-btn {
-        background-color: #2b3a55;
-        color: #dbeafe;
-        border: none;
-        text-align: left;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-btn:hover {
-        background-color: #3e4d6c;
-        color: #ffffff;
-        transform: translateX(5px);
-    }
-
-    .sidebar-btn.active {
-        border: 2px solid #ffffff;
-        box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff;
-        background-color: #3e4d6c;
-        color: #ffffff;
-        animation: glow 1.5s infinite alternate;
-    }
-
-    @keyframes glow {
-        from {
-            box-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
+        :root {
+            --primary-dark: #0a192f;
+            --primary-blue: #172a45;
+            --accent-color: #64ffda;
+            --light-bg: #f8f9fa;
+            --text-light: #ccd6f6;
+            --text-dark: #1a1a1a;
         }
-        to {
-            box-shadow: 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #ffffff;
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
-    }
-
-    .logout-btn {
-        background-color: transparent;
-        border: 1px solid #ff4d4f;
-        color: #ff4d4f;
-        transition: all 0.3s ease;
-    }
-
-    .logout-btn:hover {
-        background-color: #ff4d4f;
-        color: white;
-    }
-
-    /* Main Content */
-    .main-content {
-        background-color: var(--dark-blue);
-        overflow-y: auto;
-    }
-
-    .content-card {
-        background-color: rgba(23, 42, 69, 0.8);
-        border-radius: 12px;
-        padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Search Bar */
-    .search-bar {
-        max-width: 600px;
-        margin: 0 auto 2rem;
-    }
-
-    /* Table Styles */
-    .table-dark {
-        --bs-table-bg: var(--dark-content);
-        --bs-table-striped-bg: #1e365d;
-        --bs-table-hover-bg: #1f3a6b;
-        --bs-table-border-color: #2d3a5a;
-    }
-
-    .table th {
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.85rem;
-    }
-
-    .table td, .table th {
-        vertical-align: middle;
-        padding: 0.75rem;
-    }
-
-    /* Card Styles */
-    .card {
-        border: none;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .card-header {
-        background: linear-gradient(to right, #0a0b3d, #172a45);
-        padding: 1rem 1.5rem;
-    }
-
-    /* Floating Help Button */
-    .floating-help-btn {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 56px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--light-blue);
-        color: var(--dark-blue);
-        font-size: 1.5rem;
-        box-shadow: 0 4px 20px rgba(100, 255, 218, 0.3);
-        transition: all 0.3s ease;
-        z-index: 1000;
-    }
-
-    .floating-help-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 24px rgba(100, 255, 218, 0.4);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .sidebar {
-            width: 240px;
-            padding: 1rem;
+        
+        /* Header Styles */
+        .psa-header {
+            background: var(--primary-dark);
+            height: 80px;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
         }
         
         .psa-main {
-            font-size: 1.5rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .psa-header {
-            flex-direction: column;
-            text-align: center;
-            padding: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
         }
         
-        .psa-logo {
-            margin-bottom: 0.5rem;
-            margin-right: 0;
+        .psa-sub {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--primary-blue);
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(100, 255, 218, 0.1);
+            width: 250px;
+        }
+        
+        .sidebar-title {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 4px;
+            padding: 10px 15px;
+            text-decoration: none;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            border: 1px solid transparent;
+            background: none;
+        }
+        
+        .sidebar-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateX(5px);
+            color: var(--accent-color);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+        
+        .sidebar-btn:hover i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn.active {
+            background-color: rgba(100, 255, 218, 0.1);
+            font-weight: 500;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+        
+        .sidebar-btn.active i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn i {
+            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            background: white;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - 80px);
         }
         
         .content-card {
-            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: none;
+            padding: 2rem;
         }
         
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        /* Form Elements */
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
         }
-    }
-</style>
-</body>
+        
+        /* Buttons */
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .btn-accent:hover {
+            background-color: rgba(100, 255, 218, 0.8);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+        }
+        
+        .btn-outline-accent {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+        
+        .btn-outline-accent:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
+        }
+        
+        /* Table Styles */
+        .table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(100, 255, 218, 0.05);
+        }
+        
+        /* Help Button */
+        .help-btn {
+            background: var(--primary-dark);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .help-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-dark);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+        }
+        
+        /* Page Title */
+        .page-title {
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Card Header */
+        .card-header {
+            background: var(--primary-dark);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .header-time {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.8);
+            background: rgba(100, 255, 218, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .psa-header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </html>

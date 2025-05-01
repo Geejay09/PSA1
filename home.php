@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: index.html");
+    header("Location: index.php");
     exit();
 }
 ?>
@@ -10,340 +10,411 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Philippine Statistics Authority</title>
+    <title>PSA Inventory System</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
 </head>
-<body class="bg-dark-blue">
+<body>
 
 <div class="container-fluid p-0">
     <!-- Header -->
     <header class="psa-header d-flex align-items-center px-4 py-3">
-        <img src="assets/psa.png" alt="PSA Logo" class="psa-logo me-3">
+        <img src="assets/psa.png" alt="PSA Logo" class="psa-logo me-3" style="height: 50px;">
         <div>
-            <div class="psa-small">REPUBLIC OF THE PHILIPPINES</div>
-            <div class="psa-main">PHILIPPINE STATISTICS AUTHORITY - QUIRINO PROVINCIAL OFFICE</div>
+            <div class="text-uppercase small" style="color: rgba(255,255,255,0.6); letter-spacing: 1px; font-size: 0.7rem;">REPUBLIC OF THE PHILIPPINES</div>
+            <div class="psa-main" style="font-size: 1.3rem;">PHILIPPINE STATISTICS AUTHORITY</div>
+            <div class="psa-sub" style="font-size: 0.85rem;">Quirino Provincial Office</div>
+        </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <span class="header-time">
+                <i class="bi bi-calendar3 me-2"></i><?php echo date('F j, Y'); ?>
+            </span>
+            <span class="header-time">
+                <i class="bi bi-clock me-2"></i><span id="currentTime"></span>
+            </span>
         </div>
     </header>
 
     <!-- Body -->
-    <div class="d-flex" style="min-height: calc(100vh - 80px);">
+    <div class="d-flex">
         <!-- Sidebar -->
-        <nav class="sidebar d-flex flex-column">
-            <!-- Dashboard Button -->
-            <button class="btn sidebar-btn mb-3">
-                <i class="bi bi-speedometer2 me-2"></i> Dashboard
-            </button>
-
-            <!-- Data Entry Section -->
-            <div class="sidebar-section mb-4">
-                <h5>Data Entry</h5>
-                <button class="btn sidebar-btn" onclick="location.href='ris/ris.php'">
-                    <i class="bi bi-file-earmark-text me-2"></i> Requisition and Issuance Slip
-                </button>
-                <button class="btn sidebar-btn" onclick="location.href='iar/iar.php'">
-                    <i class="bi bi-clipboard-check me-2"></i> Inspection and Acceptance Report
-                </button>
+        <nav class="sidebar d-flex flex-column p-3" style="width: 250px;">
+            <!-- User Profile -->
+            <div class="d-flex align-items-center mb-4 p-3 rounded user-profile animate__animated animate__fadeIn">
+                <div class="me-3">
+                    <i class="bi bi-person-circle fs-3" style="color: var(--accent-color);"></i>
+                </div>
+                <div>
+                    <div class="fw-medium" style="color: white; font-family: 'Montserrat', sans-serif;"><?php echo $_SESSION['username']; ?></div>
+                    <small style="color: rgba(255,255,255,0.6); font-family: 'Roboto', sans-serif;">Administrator</small>
+                </div>
             </div>
 
-            <!-- Generate Report Section -->
-            <div class="sidebar-section mb-4">
-                <h5>Generate Report</h5>
-                <button class="btn sidebar-btn" onclick="location.href='stck_crd.php'">
+            <!-- Dashboard Button -->
+            <a href="home.php" class="btn sidebar-btn mb-2 text-start animate__animated animate__fadeIn animate__delay-1s">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+
+            <!-- Data Entry Section -->
+            <div class="mb-3 animate__animated animate__fadeIn animate__delay-1s">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
+                <a href="ris/ris.php" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Slip
+                </a>
+                <a href="iar/iar.php" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-clipboard-check me-2"></i> Inspection Report
+                </a>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="mb-3 animate__animated animate__fadeIn animate__delay-1s">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Reports</div>
+                <a href="stck_crd.php" class="btn sidebar-btn mb-1 text-start">
                     <i class="bi bi-card-checklist me-2"></i> Stock Card
-                </button>
-                <button class="btn sidebar-btn">
-                    <i class="bi bi-journal-text me-2"></i> Stock Ledger Card
-                </button>
-                <button class="btn sidebar-btn" onclick="location.href='rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Requisition and Issuance Slip
-                </button>
-                <button class="btn sidebar-btn">
-                    <i class="bi bi-clipboard-data me-2"></i> Physical Count Report
-                </button>
+                </a>
+                <a href="slc/slc.php" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-journal-text me-2"></i> Stock Ledger
+                </a>
+                <a href="rsmi/rsmi.php" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RIS Report
+                </a>
+                <a href="rpci/rpci.php" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-clipboard-data me-2"></i> Physical Count
+                </a>
             </div>
 
             <!-- Utilities Section -->
-            <div class="sidebar-section mb-4">
-                <h5>Utilities</h5>
-                <button class="btn sidebar-btn">
-                    <i class="bi bi-people me-2"></i> Manage Employee List
-                </button>
+            <div class="mb-3 animate__animated animate__fadeIn animate__delay-1s">
+                <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
+                <a href="#" class="btn sidebar-btn mb-1 text-start">
+                    <i class="bi bi-people me-2"></i> Employee List
+                </a>
             </div>
 
-            <!-- Spacer to push logout to bottom -->
+            <!-- Spacer -->
             <div class="mt-auto"></div>
 
             <!-- Logout -->
-            <form id="logoutForm" method="post">
-                <input type="hidden" name="logout" value="1">
-                <button type="button" class="btn logout-btn w-100 mt-3">
-                    <i class="bi bi-box-arrow-right me-2"></i> LOGOUT
-                </button>
-            </form>
+            <button id="logoutBtn" class="btn btn-outline-accent mt-3 animate__animated animate__fadeIn animate__delay-2s">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
         </nav>
 
         <!-- Main Content -->
-        <main class="main-content flex-grow-1 d-flex justify-content-center align-items-center p-4">
-            <div class="text-center">
-                <img src="assets/dash.jpg" alt="Dashboard Preview" class="img-fluid rounded-3 shadow-lg" style="max-width: 100%;">
-                <h2 class="mt-4 text-white">Welcome to PSA Inventory System</h2>
-                <p class="text-light-blue">Manage your inventory efficiently with our comprehensive tools</p>
+        <main class="main-content flex-grow-1 p-4">
+            <!-- Content will be added here by you -->
+            <div class="content-card p-4 animate__animated animate__fadeIn">
+                <!-- Empty content area for your use -->
             </div>
         </main>
     </div>
 </div>
 
-<!-- Floating Help Button -->
-<button id="helpBtn" class="btn btn-primary rounded-circle floating-help-btn" title="Need help?">
+<!-- Help Button -->
+<button id="helpBtn" class="btn help-btn rounded-circle position-fixed animate__animated animate__bounceIn animate__delay-2s" style="bottom: 20px; right: 20px;">
     <i class="bi bi-question-lg"></i>
 </button>
 
-<!-- SweetAlert Logic -->
+<!-- Scripts -->
 <script>
-    document.querySelector('.logout-btn').addEventListener('click', () => {
+    // Update current time
+    function updateTime() {
+        const now = new Date();
+        const timeElement = document.getElementById('currentTime');
+        timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+    }
+    
+    setInterval(updateTime, 1000);
+    updateTime();
+    
+    // Logout confirmation
+    document.getElementById('logoutBtn').addEventListener('click', () => {
         Swal.fire({
-            title: 'Are you sure you want to logout?',
-            icon: 'warning',
+            title: 'Logout Confirmation',
+            text: 'Are you sure you want to logout?',
+            icon: 'question',
             showCancelButton: true,
+            confirmButtonColor: 'var(--accent-color)',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Yes, logout',
-            cancelButtonText: 'Cancel',
-            confirmButtonColor: '#0d6efd',
-            cancelButtonColor: '#6c757d'
+            background: 'var(--primary-blue)',
+            color: 'white'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('logoutForm').submit();
+                window.location.href = 'logout.php';
             }
         });
     });
 
+    // Help button
     document.getElementById('helpBtn').addEventListener('click', () => {
         Swal.fire({
-            title: 'Need Help?',
+            title: 'Help Center',
             html: `
-                <p>View the full code guide <a href="codes.html" target="_blank" style="color: #0d6efd; text-decoration: underline;">here</a>.</p>
+                <div class="text-start" style="color: var(--text-dark);">
+                    <p style="font-family: 'Roboto', sans-serif;">For assistance with the system, please contact:</p>
+                    <ul style="font-family: 'Roboto', sans-serif;">
+                        <li>IT Support: itsupport@psa.gov.ph</li>
+                        <li>Admin Office: admin@psa.gov.ph</li>
+                    </ul>
+                    <p style="font-family: 'Roboto', sans-serif;">Or visit our <a href="codes.html" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
+                </div>
             `,
             icon: 'info',
             confirmButtonText: 'Got it!',
-            confirmButtonColor: '#0d6efd'
+            confirmButtonColor: 'var(--accent-color)',
+            background: 'white'
         });
     });
 
-    // Add active class to clicked sidebar button
-    document.querySelectorAll('.sidebar-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.classList.remove('active');
+    // Active sidebar link highlighting
+    document.querySelectorAll('.sidebar-btn').forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
+        }
+        
+        link.addEventListener('click', function(e) {
+            if (this.href === window.location.href) {
+                e.preventDefault();
+            }
+            
+            document.querySelectorAll('.sidebar-btn').forEach(el => {
+                el.classList.remove('active');
             });
+            
             this.classList.add('active');
         });
     });
 </script>
-
-<?php
-if (isset($_POST['logout'])) {
-    session_destroy();
-    echo "<script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Logged out!',
-            text: 'You have been logged out successfully.',
-            showConfirmButton: false,
-            timer: 1500
-        }).then(() => {
-            window.location.href = 'index.php';
-        });
-    </script>";
-    exit();
-}
-?>
-
 </body>
-
 <style>
-    :root {
-        --dark-blue: #0a192f;
-        --medium-blue: #172a45;
-        --light-blue: #64ffda;
-        --white: #ffffff;
-        --text-light: #ccd6f6;
-        --text-lighter: #a8b2d1;
-    }
-
-    body {
-        font-family: 'Montserrat', sans-serif;
-        background-color: var(--dark-blue);
-        color: var(--text-light);
-    }
-
-    .bg-dark-blue {
-        background-color: var(--dark-blue);
-    }
-
-    .text-light-blue {
-        color: var(--text-lighter);
-    }
-
-    /* Header Styles */
-    .psa-header {
-        background: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
-        color: var(--white);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .psa-logo {
-        height: 60px;
-        width: auto;
-    }
-
-    .psa-small {
-        font-size: 0.9rem;
-        font-weight: 500;
-        letter-spacing: 1px;
-        color: var(--text-lighter);
-    }
-
-    .psa-main {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--white);
-    }
-
-    /* Sidebar Styles */
-    .sidebar {
-        width: 280px;
-        background: linear-gradient(180deg, #0a192f 0%, #172a45 100%);
-        padding: 1.5rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-section {
-        margin-bottom: 1.5rem;
-    }
-
-    .sidebar h5 {
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--light-blue);
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(100, 255, 218, 0.2);
-    }
-
-    .sidebar-btn {
-        width: 100%;
-        text-align: left;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.5rem;
-        border-radius: 6px;
-        color: var(--text-light);
-        background-color: rgba(23, 42, 69, 0.7);
-        border: none;
-        transition: all 0.3s ease;
-        font-weight: 500;
-    }
-
-    .sidebar-btn:hover {
-        background-color: rgba(100, 255, 218, 0.1);
-        color: var(--white);
-        transform: translateX(5px);
-    }
-
-    .sidebar-btn.active {
-        background-color: rgba(100, 255, 218, 0.2);
-        color: var(--light-blue);
-        border-left: 3px solid var(--light-blue);
-        font-weight: 600;
-    }
-
-    .sidebar-btn i {
-        width: 20px;
-        text-align: center;
-    }
-
-    /* Logout Button */
-    .logout-btn {
-        background-color: transparent;
-        color: #ff6b6b;
-        border: 1px solid #ff6b6b;
-        padding: 0.75rem;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-    }
-
-    .logout-btn:hover {
-        background-color: rgba(255, 107, 107, 0.1);
-        color: #ff6b6b;
-    }
-
-    /* Main Content */
-    .main-content {
-        background-color: rgba(10, 25, 47, 0.7);
-        border-radius: 12px;
-        margin: 1.5rem;
-        padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Floating Help Button */
-    .floating-help-btn {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 56px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--light-blue);
-        color: var(--dark-blue);
-        font-size: 1.5rem;
-        box-shadow: 0 4px 20px rgba(100, 255, 218, 0.3);
-        transition: all 0.3s ease;
-        z-index: 1000;
-    }
-
-    .floating-help-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 24px rgba(100, 255, 218, 0.4);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .sidebar {
-            width: 240px;
-            padding: 1rem;
+        :root {
+            --primary-dark: #0a192f;
+            --primary-blue: #172a45;
+            --accent-color: #64ffda;
+            --light-bg: #f8f9fa;
+            --text-light: #ccd6f6;
+            --text-dark: #1a1a1a;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        .psa-header {
+            background: var(--primary-dark);
+            height: 80px;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
         }
         
         .psa-main {
-            font-size: 1.5rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .psa-header {
-            flex-direction: column;
-            text-align: center;
-            padding: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
         }
         
-        .psa-logo {
-            margin-bottom: 0.5rem;
-            margin-right: 0;
+        .psa-sub {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.7);
         }
-    }
-</style>
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--primary-blue);
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .sidebar-title {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 4px;
+            padding: 10px 15px;
+            text-decoration: none;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            border: 1px solid transparent;
+        }
+        
+        .sidebar-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateX(5px);
+            color: var(--accent-color);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+        
+        .sidebar-btn:hover i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn.active {
+            background-color: rgba(100, 255, 218, 0.1);
+            font-weight: 500;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+        
+        .sidebar-btn.active i {
+            color: var(--accent-color);
+        }
+        
+        .sidebar-btn i {
+            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            background: white;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: none;
+        }
+        
+        /* User Profile */
+        .user-profile {
+            background: rgba(100, 255, 218, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Buttons */
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: var(--primary-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .btn-accent:hover {
+            background-color: rgba(100, 255, 218, 0.8);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+        }
+        
+        .btn-outline-accent {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+        
+        .btn-outline-accent:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
+        }
+        
+        /* Help Button */
+        .help-btn {
+            background: var(--primary-dark);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .help-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-dark);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+        }
+        
+        /* Time in header */
+        .header-time {
+            font-family: 'Roboto', sans-serif;
+            color: rgba(255,255,255,0.8);
+            background: rgba(100, 255, 218, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .psa-header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .header-date-time {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
 </html>
