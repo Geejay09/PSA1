@@ -27,7 +27,7 @@ if (!isset($_SESSION['username'])) {
 <div class="container-fluid p-0">
     <!-- Header -->
     <header class="psa-header d-flex align-items-center px-4 py-3">
-        <img src="assets/psa.png" alt="PSA Logo" class="psa-logo me-3" style="height: 50px;">
+        <img src="../assets/psa.png" alt="PSA Logo" class="psa-logo me-3" style="height: 50px;">
         <div>
             <div class="text-uppercase small" style="color: rgba(255,255,255,0.6); letter-spacing: 1px; font-size: 0.7rem;">REPUBLIC OF THE PHILIPPINES</div>
             <div class="psa-main" style="font-size: 1.3rem;">PHILIPPINE STATISTICS AUTHORITY</div>
