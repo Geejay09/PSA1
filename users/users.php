@@ -83,7 +83,7 @@ if (!isset($_SESSION['username'])) {
             <!-- Utilities Section -->
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
-                <<button class="btn sidebar-btn mb-1" onclick="location.href='../users/users.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../users/users.php'">
                     <i class="bi bi-file-earmark-spreadsheet me-2"></i> Employee List
                 </button>
             </div>
@@ -100,7 +100,7 @@ if (!isset($_SESSION['username'])) {
         <!-- Main Content -->
         <main class="main-content flex-grow-1 p-4">
             <div class="content-card">
-                <h2 class="text-center mb-4 page-title">REPORT ON PHYSICAL COUNT OF INVENTORIES</h2>
+                <h2 class="text-center mb-4 page-title">EMPLOYEE LIST</h2>
                 
                 <!-- Empty content area for your implementation -->
                 <div class="text-center py-5">
