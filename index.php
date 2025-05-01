@@ -42,7 +42,7 @@
       <div class="login-panel">
         <div class="login-content">
           <h2>Sign In</h2>
-          <p class="login-subtitle">Enter your credentials to continue</p>
+          <p class="login-subtitle">Please Enter your credentials to continue</p>
           
           <form id="loginForm" class="login-form">
             <div class="form-group">
