@@ -64,11 +64,11 @@ if (!isset($_SESSION['username'])) {
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
                     <i class="bi bi-card-checklist me-2"></i> Stock Ledger
                 </button>
-                <button class="btn sidebar-btn mb-1 active" onclick="location.href='../rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RSMI Report
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../rsmi/rsmi.php'">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RIS Report
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
-                    <i class="bi bi-card-checklist me-2"></i> Physical Count
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Physical Count
                 </button>
             </div>
 

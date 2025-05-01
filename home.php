@@ -150,7 +150,7 @@ if (!isset($_SESSION['username'])) {
             color: 'white'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'logout.php';
+                window.location.href = 'index.php';
             }
         });
     });

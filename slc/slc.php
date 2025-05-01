@@ -58,17 +58,17 @@ if (!isset($_SESSION['username'])) {
             <!-- Reports Section -->
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Reports</div>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='stck_crd.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../stck_crd.php'">
                     <i class="bi bi-card-checklist me-2"></i> Stock Card
                 </button>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='slc/slc.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
                     <i class="bi bi-card-checklist me-2"></i> Stock Ledger
                 </button>
-                <button class="btn sidebar-btn mb-1 active" onclick="location.href='rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RSMI Report
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../rsmi/rsmi.php'">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RIS Report
                 </button>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='rpci/rpci.php'">
-                    <i class="bi bi-card-checklist me-2"></i> Physical Count
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Physical Count
                 </button>
             </div>
 
