@@ -95,7 +95,7 @@ if (!isset($_SESSION['username'])) {
             <!-- Utilities Section -->
             <div class="mb-3 animate__animated animate__fadeIn animate__delay-1s">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
-                <a href="users/users.php" class="btn sidebar-btn mb-1 text-start">
+                <a href="employees/employees.php" class="btn sidebar-btn mb-1 text-start">
                     <i class="bi bi-people me-2"></i> Employee List
                 </a>
             </div>

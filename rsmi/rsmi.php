@@ -192,7 +192,7 @@ while ($row = $result->fetch_assoc()) {
             <!-- Utilities Section -->
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='../users/users.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../employees/employees.php'">
                     <i class="bi bi-file-earmark-spreadsheet me-2"></i> Employee List
                 </button>
             </div>

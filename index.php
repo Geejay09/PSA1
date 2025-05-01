@@ -6,9 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
 </head>
-<body>
 <body>
   <div class="main-wrapper">
     <div class="login-box">
@@ -16,45 +14,43 @@
         <!-- form content -->
         <div class="login-container">
 
-<!-- Welcome Panel -->
-<div class="welcome-section">
-  <h1>Welcome!</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-</div>
+          <!-- Welcome Panel -->
+          <div class="welcome-section">
+            <h1>Welcome!</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
+          </div>
 
-<!-- Login Panel -->
-<div class="login-box">
-  <form id="loginForm" class="login-form">
-    <h2>Sign in</h2>
-    <div class="form-group">
-      <label for="username">User Name</label>
-      <input type="text" id="username" name="username" placeholder="username" required>
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="••••••••" required>
-    </div>
-    <button type="submit" class="btn-login">Submit</button>
-    <div class="options">
-      <a href="#">Forgot password?</a>
-</div>
+          <!-- Login Panel -->
+          <div class="login-box">
+            <form id="loginForm" class="login-form">
+              <h2>Sign in</h2>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+              </div>
+              <button type="submit" class="btn-login">Submit</button>
+              <div class="options">
+                <a href="#">Forgot password?</a>
+              </div>
+            </form>
+          </div>
 
-</div>
+        </div>
       </form>
     </div>
   </div>
-</body>
-
-</body>
-
-  
 
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const form = e.target;
-      const formData = new FormData(form);
+      const formData = new FormData();
+      formData.append('email', document.getElementById('email').value);
+      formData.append('password', document.getElementById('password').value);
 
       fetch('login.php', {
         method: 'POST',
@@ -65,11 +61,11 @@
         if (data.success) {
           Swal.fire({
             icon: 'success',
-            title: 'Login Successful!',
-            text: data.message,
+            title: 'Welcome, ' + data.user.name + '!',
+            text: 'Logged in as ' + data.user.position,
             timer: 1500,
             showConfirmButton: false,
-            backdrop: true, // use default backdrop
+            backdrop: true,
             allowOutsideClick: false,
             allowEscapeKey: false,
             allowEnterKey: false
@@ -90,7 +86,7 @@
     });
   </script>
 
-<style>
+  <style>
     * {
       margin: 0;
       padding: 0;
@@ -111,24 +107,23 @@
     }
 
     html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Prevent scrollbar */
-  display: block;
-  background: url('assets/er.jpg') no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Segoe UI', sans-serif;
-  position: relative;
-}
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: block;
+      background: url('assets/er.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      position: relative;
+    }
 
-
-.main-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+    .main-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
     .login-container {
       display: flex;
@@ -160,17 +155,6 @@
       font-size: 16px;
       line-height: 1.6;
       margin-bottom: 30px;
-    }
-
-    .welcome-section .btn-learn {
-      padding: 10px 20px;
-      background: linear-gradient(to right,rgb(30, 124, 247),rgb(0, 55, 236));
-      border: none;
-      border-radius: 30px;
-      color: #fff;
-      font-weight: bold;
-      text-decoration: none;
-      width: fit-content;
     }
 
     .login-box {
@@ -244,29 +228,6 @@
       text-decoration: none;
     }
 
-    .register-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.9rem;
-    }
-
-    .register-link a {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    .social-icons {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .social-icons i {
-      font-size: 20px;
-      margin: 0 10px;
-      color: #fff;
-      cursor: pointer;
-    }
-
     @media (max-width: 768px) {
       .login-container {
         flex-direction: column;
@@ -278,4 +239,5 @@
       }
     }
   </style>
+</body>
 </html>
