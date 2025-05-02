@@ -26,6 +26,32 @@
     <div class="shape shape-square"></div>
   </div>
 
+  <!-- Forgot Password Modal -->
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="forgotPasswordForm">
+            <div class="mb-3">
+              <label for="resetEmail" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="resetEmail" required placeholder="Enter your registered email">
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">Send Reset Link</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <p class="small text-muted">We'll send you a link to reset your password</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="login-wrapper">
     <!-- Floating Logo -->
     <div class="logo-container">
@@ -70,7 +96,7 @@
             </div>
             
             <div class="form-options">
-              <a href="#" class="forgot-password">Forgot password?</a>
+              <a href="reset-password.php" class="forgot-password" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot password?</a>
             </div>
             
             <button type="submit" class="login-button">
@@ -83,7 +109,9 @@
     </div>
   </div>
 
-  <!-- JavaScript remains the same as before -->
+  <!-- Add Bootstrap JS for modal functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -131,6 +159,75 @@
           submitBtn.innerHTML = originalBtnText;
       });
     });
+
+    // Forgot Password Form Submission
+    document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('resetEmail').value.trim();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Basic client-side validation
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Email',
+            text: 'Please enter a valid email address',
+            confirmButtonColor: '#64ffda'
+        });
+        return;
+    }
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+    
+    // Using URLSearchParams instead of FormData
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    
+    fetch('forgot-password.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData
+    })
+    .then(async response => {
+        const text = await response.text();
+        try {
+            return JSON.parse(text);
+        } catch {
+            throw new Error(text || 'Invalid server response');
+        }
+    })
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.message || 'Request failed');
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: data.message,
+            confirmButtonColor: '#64ffda'
+        });
+        modal.hide();
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Failed to process request',
+            confirmButtonColor: '#64ffda'
+        });
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    });
+});
 
     function togglePassword() {
       const passwordInput = document.getElementById('password');
@@ -182,7 +279,50 @@
       overflow: hidden;
     }
 
-    /* New Background Styles */
+    /* Modal Styles */
+    .modal-content {
+      background-color: var(--dark);
+      color: var(--light);
+      border: 1px solid var(--border);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-footer {
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-close {
+      filter: invert(1);
+    }
+
+    .form-control {
+      background-color: rgba(10, 25, 47, 0.5);
+      border: 1px solid var(--border);
+      color: var(--light);
+    }
+
+    .form-control:focus {
+      background-color: rgba(10, 25, 47, 0.7);
+      border-color: var(--primary);
+      color: var(--light);
+      box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: var(--dark);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    /* Rest of your existing styles... */
     .bg-particles {
       position: fixed;
       top: 0;
