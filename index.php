@@ -78,59 +78,143 @@
 
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const formData = new FormData();
-      formData.append('email', document.getElementById('email').value);
-      formData.append('password', document.getElementById('password').value);
-
-      fetch('login.php', {
+    e.preventDefault();
+    
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Disable button and show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>Signing In...</span><i class="bi bi-arrow-repeat bi-spin"></i>';
+    
+    const formData = new FormData(form);
+    
+    fetch('login.php', {
         method: 'POST',
         body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Get error message from response
+            return response.json().then(err => {
+                throw new Error(err.message || 'Login failed');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
         if (data.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Welcome, ' + data.user.name + '!',
-            text: 'Logged in as ' + data.user.position,
-            timer: 1500,
-            showConfirmButton: false,
-            backdrop: true,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false
-          }).then(() => {
-            window.location.href = 'home.php';
-          });
+            Swal.fire({
+                icon: 'success',
+                title: `Welcome, ${data.user.name}!`,
+                text: `Logged in as ${data.user.position}`,
+                timer: 1500,
+                showConfirmButton: false,
+                backdrop: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                willClose: () => {
+                    window.location.href = 'home.php';
+                }
+            });
         } else {
-          Swal.fire({
+            throw new Error(data.message);
+        }
+    })
+    .catch(error => {
+        Swal.fire({
             icon: 'error',
             title: 'Login Failed',
-            text: data.message
-          });
-        }
-      })
-      .catch(() => {
-        Swal.fire('Error', 'An error occurred. Please try again.', 'error');
-      });
+            text: error.message,
+            confirmButtonColor: '#64ffda',
+            background: 'var(--dark)',
+            color: 'var(--light)'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
     });
+});
 
-    function togglePassword() {
-      const passwordInput = document.getElementById('password');
-      const toggleIcon = document.querySelector('.toggle-password');
-      
-      if (passwordInput.type === 'password') {
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.querySelector('.toggle-password');
+    
+    if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         toggleIcon.classList.remove('bi-eye-fill');
         toggleIcon.classList.add('bi-eye-slash-fill');
-      } else {
+    } else {
         passwordInput.type = 'password';
         toggleIcon.classList.remove('bi-eye-slash-fill');
         toggleIcon.classList.add('bi-eye-fill');
-      }
     }
+}
+
+// Add particles animation
+document.addEventListener('DOMContentLoaded', function() {
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach(particle => {
+        // Randomize animation duration and delay
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        particle.style.animation = `particles ${duration}s ${delay}s infinite linear`;
+        
+        // Randomize starting position
+        particle.style.left = `${Math.random() * 100}vw`;
+    });
+});
+
+async function addEmployee(formData) {
+    try {
+        const response = await fetch('add_employee.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to add employee');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Employee Added',
+            html: `
+                <p>${result.message}</p>
+                <div class="employee-details">
+                    <p><strong>Name:</strong> ${result.user.name}</p>
+                    <p><strong>Email:</strong> ${result.user.email}</p>
+                    <p><strong>Position:</strong> ${result.user.position}</p>
+                    <p><strong>Access Level:</strong> ${result.user.access_level}</p>
+                </div>
+            `,
+            confirmButtonColor: '#64ffda',
+            background: 'var(--dark)',
+            color: 'var(--light)'
+        });
+
+        // Reset form or redirect
+        form.reset();
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message,
+            confirmButtonColor: '#64ffda',
+            background: 'var(--dark)',
+            color: 'var(--light)'
+        });
+    }
+}
   </script>
 
   <style>
