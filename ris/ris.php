@@ -73,10 +73,10 @@ if (!isset($_SESSION['logged_in'])) {
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
                 <button class="btn sidebar-btn mb-1 active" onclick="location.href='../ris/ris.php'">
-                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Slip
+                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Issuance Slip
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
-                    <i class="bi bi-clipboard-check me-2"></i> Inspection Report
+                    <i class="bi bi-clipboard-check me-2"></i> Issuance and Acceptance Report
                 </button>
             </div>
 
@@ -87,13 +87,13 @@ if (!isset($_SESSION['logged_in'])) {
                     <i class="bi bi-card-checklist me-2"></i> Stock Card
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
-                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger
+                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger Card
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RIS Report
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Report on Supplies and Materials Issued
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Physical Count
+                    <i class="bi bi-clipboard-data me-2"></i> Report on Physical Count of Inventories
                 </button>
             </div>
 
@@ -427,7 +427,9 @@ if (!isset($_SESSION['logged_in'])) {
             --light-bg: #f8f9fa;
             --text-light: #ccd6f6;
             --text-dark: #1a1a1a;
+            --text-black:rgb(0, 0, 0);
         }
+        
         
         body {
             font-family: 'Roboto', sans-serif;
@@ -464,7 +466,7 @@ if (!isset($_SESSION['logged_in'])) {
             transition: all 0.3s ease;
             box-shadow: 2px 0 15px rgba(0,0,0,0.1);
             border-right: 1px solid rgba(100, 255, 218, 0.1);
-            width: 342px;
+            width: 250px;
         }
         
         .sidebar-title {
@@ -561,7 +563,7 @@ if (!isset($_SESSION['logged_in'])) {
         .form-floating>.form-control:focus~label,
         .form-floating>.form-control:not(:placeholder-shown)~label,
         .form-floating>.form-select~label {
-            color: var(--accent-color);
+            color: var(--text-black);
         }
         
         /* Buttons */
@@ -581,18 +583,18 @@ if (!isset($_SESSION['logged_in'])) {
         }
         
         .btn-outline-accent {
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
+            background-color: var(--accent-color);
+            color: var(--primary-dark);
             font-family: 'Montserrat', sans-serif;
             font-weight: 500;
+            border: none;
         }
         
         .btn-outline-accent:hover {
-            background-color: rgba(100, 255, 218, 0.1);
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
+            background-color: rgba(100, 255, 218, 0.8);
+            color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.2);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
         }
         
         /* Table Styles */

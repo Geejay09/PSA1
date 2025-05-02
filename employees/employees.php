@@ -69,11 +69,11 @@ if (!isset($_SESSION['logged_in'])) {
 
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
-                <button class="btn sidebar-btn mb-1 active" onclick="location.href='../ris/ris.php'">
-                    <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i> Requisition Slip
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../ris/ris.php'">
+                    <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i> Requisition Issuance Slip
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
-                    <i class="bi bi-clipboard-check me-2" aria-hidden="true"></i> Inspection Report
+                    <i class="bi bi-clipboard-check me-2" aria-hidden="true"></i> Issuance and Acceptance Report
                 </button>
             </div>
 
@@ -83,19 +83,19 @@ if (!isset($_SESSION['logged_in'])) {
                     <i class="bi bi-card-checklist me-2" aria-hidden="true"></i> Stock Card
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
-                    <i class="bi bi-card-checklist me-2" aria-hidden="true"></i> Stock Ledger
+                    <i class="bi bi-card-checklist me-2" aria-hidden="true"></i> Stock Ledger Card
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2" aria-hidden="true"></i> RIS Report
+                    <i class="bi bi-file-earmark-spreadsheet me-2" aria-hidden="true"></i> Report on Supplies and Materials Issued
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2" aria-hidden="true"></i> Physical Count
+                    <i class="bi bi-clipboard-data me-2" aria-hidden="true"></i> Report on Physical Count of Inventories
                 </button>
             </div>
 
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Utilities</div>
-                <button class="btn sidebar-btn mb-1">
+                <button class="btn sidebar-btn mb-1 active">
                     <i class="bi bi-people me-2" aria-hidden="true"></i> Employee List
                 </button>
             </div>
@@ -125,7 +125,6 @@ if (!isset($_SESSION['logged_in'])) {
 
                         <div class="table-responsive">
                             <table class="table table-striped table-hover" id="employeeTable" aria-describedby="employeeTableDescription">
-                                <caption id="employeeTableDescription">List of employees with their details and actions</caption>
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">ID</th>

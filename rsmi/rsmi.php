@@ -180,10 +180,10 @@ while ($row = $result->fetch_assoc()) {
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../ris/ris.php'">
-                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Slip
+                    <i class="bi bi-file-earmark-text me-2"></i> Requisition Issuance Slip
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
-                    <i class="bi bi-clipboard-check me-2"></i> Inspection Report
+                    <i class="bi bi-clipboard-check me-2"></i> Issuance and Acceptance Report
                 </button>
             </div>
 
@@ -194,13 +194,13 @@ while ($row = $result->fetch_assoc()) {
                     <i class="bi bi-card-checklist me-2"></i> Stock Card
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../slc/slc.php'">
-                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger
+                    <i class="bi bi-card-checklist me-2"></i> Stock Ledger Card
                 </button>
                 <button class="btn sidebar-btn mb-1 active" onclick="location.href='../rsmi/rsmi.php'">
-                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> RSMI Report
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i> Report on Supplies and Materials Issued
                 </button>
                 <button class="btn sidebar-btn mb-1" onclick="location.href='../rpci/rpci.php'">
-                    <i class="bi bi-card-checklist me-2"></i> Physical Count
+                    <i class="bi bi-clipboard-data me-2"></i> Report on Physical Count of Inventoriess
                 </button>
             </div>
 
