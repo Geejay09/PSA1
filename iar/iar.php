@@ -581,11 +581,10 @@ if (!isset($_SESSION['logged_in'])) {
         }
         
         .btn-outline-accent {
-            background-color: var(--primary-dark);
-            color: var(--accent-color);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            border: none;
+            border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
         }
         
         .btn-outline-accent:hover {

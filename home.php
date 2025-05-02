@@ -74,7 +74,7 @@ if (!isset($_SESSION['logged_in'])) {
                     <i class="bi bi-file-earmark-text me-2"></i> Requisition Issuance Slip
                 </a>
                 <a href="iar/iar.php" class="btn sidebar-btn mb-1 text-start">
-                    <i class="bi bi-clipboard-check me-2"></i> Inspection and Acceptance Report
+                    <i class="bi bi-clipboard-check me-2"></i> Issuance and Acceptance Report
                 </a>
             </div>
 

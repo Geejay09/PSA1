@@ -70,10 +70,10 @@ if (!isset($_SESSION['logged_in'])) {
             <!-- Data Entry Section -->
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='ris/ris.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../ris/ris.php'">
                     <i class="bi bi-file-earmark-text me-2"></i> Requisition Issuance Slip
                 </button>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='iar/iar.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
                     <i class="bi bi-clipboard-check me-2"></i> Issuance and Acceptance Report
                 </button>
             </div>
