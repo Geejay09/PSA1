@@ -139,6 +139,80 @@
     });
 });
 
+  // In your form submission handler
+let isSubmitting = false;
+
+document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please wait',
+            text: 'Your submission is already being processed',
+            confirmButtonColor: '#64ffda'
+        });
+        return;
+    }
+    
+    isSubmitting = true;
+    const submitBtn = document.getElementById('submitBtn');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Disable button and show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    
+    try {
+        const formData = new FormData(this);
+        
+        // Add unique submission ID
+        formData.append('submission_id', Date.now().toString());
+        
+        const response = await fetch('add_employee.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.message || 'Registration failed');
+        }
+        
+        // Success - show confirmation
+        Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful',
+            html: `
+                <p>${result.message}</p>
+                <div class="user-details mt-3">
+                    <p><strong>Name:</strong> ${result.user.name}</p>
+                    <p><strong>Email:</strong> ${result.user.email}</p>
+                    <p><strong>Position:</strong> ${result.user.position}</p>
+                </div>
+            `,
+            confirmButtonColor: '#64ffda',
+            willClose: () => {
+                // Reset form after successful submission
+                this.reset();
+            }
+        });
+        
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: error.message,
+            confirmButtonColor: '#64ffda'
+        });
+    } finally {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }
+});
+
 function togglePassword() {
     const passwordInput = document.getElementById('password');
     const toggleIcon = document.querySelector('.toggle-password');

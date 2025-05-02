@@ -16,16 +16,9 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Verify admin access (but allow if no admin exists yet)
-$admin_check = $conn->query("SELECT id FROM tbl_employees WHERE access_level = 'admin' AND is_deleted = 0 LIMIT 1");
-if ($admin_check->num_rows > 0 && (!isset($_SESSION['access_level']) || $_SESSION['access_level'] !== 'admin')) {
-    http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
-    exit;
-}
-
-// Verify admin access (add this if you want to restrict to admins only)
-if (!isset($_SESSION['access_level']) || $_SESSION['access_level'] !== 'admin') {
+// Skip admin check if no admin exists (first-time setup)
+$adminExists = $conn->query("SELECT 1 FROM tbl_employees WHERE access_level = 'admin' AND is_deleted = 0 LIMIT 1")->num_rows > 0;
+if ($adminExists && (!isset($_SESSION['access_level']) || $_SESSION['access_level'] !== 'admin')) {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
     exit;
@@ -51,7 +44,7 @@ foreach ($required as $field) {
 // Sanitize input
 $first_name = $conn->real_escape_string(trim($_POST['first_name']));
 $last_name = $conn->real_escape_string(trim($_POST['last_name']));
-$email = strtolower($conn->real_escape_string(trim($_POST['email'])));
+$email = trim($_POST['email']); // Preserve original case
 $position = $conn->real_escape_string(trim($_POST['position']));
 $access_level = in_array(strtolower($_POST['access_level']), ['admin', 'staff', 'viewer']) 
     ? strtolower($_POST['access_level']) 
@@ -75,60 +68,62 @@ if (strlen($_POST['password']) < 8) {
 $conn->begin_transaction();
 
 try {
-    // Check if email exists with lock to prevent race conditions
-    $check_stmt = $conn->prepare("SELECT id FROM tbl_employees WHERE LOWER(email) = LOWER(?) FOR UPDATE");
-    $check_stmt->bind_param("s", $email);
-    $check_stmt->execute();
-    $check_result = $check_stmt->get_result();
-
-    if ($check_result->num_rows > 0) {
-        throw new Exception('Email already exists');
-    }
-
-    // Hash password
+    // FIRST: Attempt to insert directly (let database handle uniqueness)
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-
-    // Insert new user
-    $insert_stmt = $conn->prepare("
+    
+    $stmt = $conn->prepare("
         INSERT INTO tbl_employees 
         (first_name, last_name, email, password, position, access_level, is_deleted) 
         VALUES (?, ?, ?, ?, ?, ?, 0)
     ");
-    $insert_stmt->bind_param("ssssss", $first_name, $last_name, $email, $password, $position, $access_level);
+    $stmt->bind_param("ssssss", $first_name, $last_name, $email, $password, $position, $access_level);
     
-    if (!$insert_stmt->execute()) {
-        throw new Exception($insert_stmt->error);
+    if ($stmt->execute()) {
+        $conn->commit();
+        echo json_encode([
+            'status' => 'success', 
+            'message' => 'User created successfully',
+            'user_id' => $stmt->insert_id
+        ]);
+        exit;
     }
     
-    $conn->commit();
-    
-    // Log the action
-    error_log("New user created: $email by ".$_SESSION['email']);
-    
-    echo json_encode([
-        'status' => 'success', 
-        'message' => 'User created successfully',
-        'user_id' => $insert_stmt->insert_id,
-        'user' => [
-            'name' => "$first_name $last_name",
-            'email' => $email,
-            'position' => $position,
-            'access_level' => $access_level
-        ]
-    ]);
+    // If we get here, insertion failed - check if it's a duplicate error
+    if ($conn->errno == 1062) { // MySQL duplicate key error code
+        throw new Exception('Email already exists');
+    }
+    throw new Exception($conn->error);
+
 } catch (Exception $e) {
     $conn->rollback();
-    http_response_code(409);
-    echo json_encode([
-        'status' => 'error', 
-        'message' => $e->getMessage(),
-        'suggestion' => $e->getMessage() === 'Email already exists' 
-            ? 'Please use a different email address' 
-            : 'Please try again later'
-    ]);
+    
+    // Verify if the email actually exists
+    $check = $conn->prepare("SELECT id FROM tbl_employees WHERE email = ?");
+    $check->bind_param("s", $email);
+    $check->execute();
+    $result = $check->get_result();
+    
+    if ($result->num_rows == 0) {
+        // False positive - email doesn't actually exist
+        error_log("False duplicate detected for email: $email");
+        http_response_code(500);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'System error - please try again',
+            'debug' => 'False duplicate detection'
+        ]);
+    } else {
+        // Genuine duplicate
+        http_response_code(409);
+        echo json_encode([
+            'status' => 'error', 
+            'message' => $e->getMessage(),
+            'suggestion' => 'Please use a different email address'
+        ]);
+    }
 } finally {
-    if (isset($check_stmt)) $check_stmt->close();
-    if (isset($insert_stmt)) $insert_stmt->close();
+    if (isset($stmt)) $stmt->close();
+    if (isset($check)) $check->close();
     $conn->close();
 }
 ?>
