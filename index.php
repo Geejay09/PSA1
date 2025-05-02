@@ -49,7 +49,7 @@
               <label for="email">Email Address</label>
               <div class="input-group">
                 <i class="bi bi-envelope-at"></i>
-                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                <input type="email" id="email" name="email" placeholder="your@gmail.com" required>
               </div>
             </div>
             
