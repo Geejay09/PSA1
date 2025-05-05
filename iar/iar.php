@@ -187,6 +187,7 @@ if (!isset($_SESSION['logged_in'])) {
                                     <th>Description</th>
                                     <th>Unit</th>
                                     <th>Quantity</th>
+                                    <th>Cost</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -209,6 +210,7 @@ if (!isset($_SESSION['logged_in'])) {
                                         </select>
                                     </td>
                                     <td><input type="number" name="quantity[]" class="form-control" min="0"></td>
+                                    <td><input type="number" name="cost[]" class="form-control" min="0" step="0.01"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -260,6 +262,7 @@ if (!isset($_SESSION['logged_in'])) {
 </button>
 
 <script>
+    
     // Update current time
     function updateTime() {
         const now = new Date();
@@ -293,6 +296,7 @@ if (!isset($_SESSION['logged_in'])) {
                 </select>
             </td>
             <td><input type="number" name="quantity[]" class="form-control" min="0"></td>
+            <td><input type="number" name="cost[]" class="form-control" min="0" step="0.01"></td>
         `;
     }
 

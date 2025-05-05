@@ -1,1 +1,784 @@
 [29-Apr-2025 09:47:24 Europe/Berlin] PHP Warning:  Undefined variable $dscrtn in C:\xampp\htdocs\beta\iar\submit.php on line 82
+[05-May-2025 05:03:32 Europe/Berlin] PHP Warning:  Undefined variable $dscrtn in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:03:32 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:13:29 Europe/Berlin] PHP Warning:  Undefined variable $descode in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:13:29 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:15:58 Europe/Berlin] PHP Warning:  Undefined variable $descode in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:15:58 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\PSA1\iar\submit.php on line 85
+[05-May-2025 05:56:42 Europe/Berlin] Received POST data: Array
+(
+    [fund_cluster] => Regular
+    [supplier] => testing
+    [iar_no] => 03
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 3441332
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.1
+        )
+
+    [item] => Array
+        (
+            [0] => Acetate
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => roll
+        )
+
+    [unit] => Array
+        (
+            [0] => roll
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 20
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 05:56:42 Europe/Berlin] Array size mismatch: descriptions has 0 elements, expected 1
+[05-May-2025 06:29:22 Europe/Berlin] Array counts:
+Array
+(
+    [stock_codes] => 1
+    [descriptions] => 0
+    [items] => 1
+    [units] => 1
+    [quantities] => 1
+    [cost] => 1
+)
+
+[05-May-2025 06:29:22 Europe/Berlin] Sample of POST data:
+Array
+(
+    [sample_stock_code] => A.1
+    [sample_description] => N/A
+    [sample_item] => Acetate
+)
+
+[05-May-2025 07:04:55 Europe/Berlin] Received data:
+Array
+(
+    [postData] => Array
+        (
+            [supplier] => disadeco
+            [iar_no] => 01
+            [date] => 2025-05-05
+        )
+
+    [itemCounts] => Array
+        (
+            [stock_codes] => 1
+            [descriptions] => 0
+            [items] => 1
+            [units] => 1
+            [quantities] => 1
+            [costs] => 1
+        )
+
+)
+
+[05-May-2025 07:04:55 Europe/Berlin] Array mismatch: descriptions has 0 items (expected 1)
+[05-May-2025 07:05:39 Europe/Berlin] Received data:
+Array
+(
+    [postData] => Array
+        (
+            [supplier] => disadeco
+            [iar_no] => 01
+            [date] => 2025-05-05
+        )
+
+    [itemCounts] => Array
+        (
+            [stock_codes] => 1
+            [descriptions] => 0
+            [items] => 1
+            [units] => 1
+            [quantities] => 1
+            [costs] => 1
+        )
+
+)
+
+[05-May-2025 07:05:39 Europe/Berlin] Array mismatch: descriptions has 0 items (expected 1)
+[05-May-2025 07:16:16 Europe/Berlin] COMPLETE RAW POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 10
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:17:14 Europe/Berlin] COMPLETE RAW POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 10
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:21:46 Europe/Berlin] COMPLETE RAW POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 10
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:32:45 Europe/Berlin] COMPLETE RAW POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 10
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:33:23 Europe/Berlin] COMPLETE RAW POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 10
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:33:23 Europe/Berlin] PHP Warning:  Undefined variable $requiredFields in C:\xampp\htdocs\PSA1\iar\submit.php on line 24
+[05-May-2025 07:33:23 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, null given in C:\xampp\htdocs\PSA1\iar\submit.php on line 24
+[05-May-2025 07:33:23 Europe/Berlin] PHP Warning:  Undefined array key "descd" in C:\xampp\htdocs\PSA1\iar\submit.php on line 34
+[05-May-2025 07:33:23 Europe/Berlin] PHP Warning:  Undefined array key "descd" in C:\xampp\htdocs\PSA1\iar\submit.php on line 34
+[05-May-2025 07:45:04 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:46:01 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:46:36 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:47:07 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:49:50 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:52:40 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 07:53:05 Europe/Berlin] COMPLETE POST DATA:
+Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => PSA
+    [iar_no] => 01
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 12
+    [requisitioning_office] => psa
+    [responsibility_center] => asdasda
+    [stock_code] => Array
+        (
+            [0] => A.3.1
+        )
+
+    [item] => Array
+        (
+            [0] => Ballpen
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Black
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [cost] => Array
+        (
+            [0] => 50
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 08:02:26 Europe/Berlin] Array mismatch: descd has 0 items (expected 1)
+[05-May-2025 08:12:35 Europe/Berlin] Complete POST data: Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => try
+    [iar_no] => 02
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 02
+    [requisitioning_office] => PSA
+    [responsibility_center] => 0002
+    [stock_code] => Array
+        (
+            [0] => A.31
+        )
+
+    [item] => Array
+        (
+            [0] => Paper Fastener
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Plastic/Metal
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 5
+        )
+
+    [cost] => Array
+        (
+            [0] => 5
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 08:12:35 Europe/Berlin] Array length mismatch - Field: descd
+[05-May-2025 08:12:35 Europe/Berlin] Expected: 1, Got: 0
+[05-May-2025 08:42:36 Europe/Berlin] Complete POST data: Array
+(
+    [fund_cluster] => Locally Funded
+    [supplier] => try
+    [iar_no] => 02
+    [date] => 2025-05-05
+    [pr_no] => 20/20/20-54545
+    [invoice_no] => 02
+    [requisitioning_office] => PSA
+    [responsibility_center] => 0002
+    [stock_code] => Array
+        (
+            [0] => A.31
+        )
+
+    [item] => Array
+        (
+            [0] => Paper Fastener
+        )
+
+    [dscrtn] => Array
+        (
+            [0] => Plastic/Metal
+        )
+
+    [unit] => Array
+        (
+            [0] => pc
+        )
+
+    [quantity] => Array
+        (
+            [0] => 5
+        )
+
+    [cost] => Array
+        (
+            [0] => 5
+        )
+
+    [date_inspected] => 2025-05-05
+    [i_officer] => Maloives
+    [final_date_received] => 2025-05-05
+    [custodian] => Maloives
+)
+
+[05-May-2025 08:42:36 Europe/Berlin] Array length mismatch - Field: descd
+[05-May-2025 08:42:36 Europe/Berlin] Expected: 1, Got: 0

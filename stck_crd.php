@@ -269,7 +269,7 @@ $conn->close();
         ws['A1'] = { v: 'STOCK CARD', t: 's', s: { font: { bold: true, sz: 14 }, alignment: { horizontal: "center" } } };
 
         // Header Info
-        ws['A2'] = { v: 'Entity Name: Philippine Statistics Authority', t: 's', s: boldcenter };
+        ws['A2'] = { v: 'Entity Name: Philippine Statistics Authority', t: 's', s: boldCenter };
         ws['F2'] = { v: 'Fund Cluster:', t: 's', s: normalLeft };
         ws['A3'] = { v: 'Item: ' + (itemInfo?.item || ''), t: 's', s: normalLeft };
         ws['F3'] = { v: 'Stock No.: ' + stock_no, t: 's', s: normalLeft };
