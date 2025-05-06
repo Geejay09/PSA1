@@ -113,17 +113,71 @@ if (!isset($_SESSION['logged_in'])) {
         </nav>
 
         <!-- Main Content -->
+        <!-- Main Content -->
         <main class="main-content flex-grow-1 p-4">
             <div class="content-card">
                 <h2 class="text-center mb-4 page-title">STOCK LEDGER CARD</h2>
                 
-                <!-- Empty content area for your implementation -->
-                <div class="text-center py-5">
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle-fill me-2"></i>
-                        Content area - To be implemented
+                <!-- Search Form -->
+                <form method="GET" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="stock_no" class="form-control" placeholder="Enter stock number..." value="<?= htmlspecialchars($stock_no) ?>" required>
+                        <button class="btn btn-accent" type="submit">
+                            <i class="bi bi-search me-2"></i> Search
+                        </button>
                     </div>
-                </div>
+                </form>
+
+                <?php if (!empty($stock_no)): ?>
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Stock Card - Stock Number: <?= htmlspecialchars($stock_no) ?></h5>
+                        </div>
+                        <div class="card-body">
+                            <?php if (!empty($data)): ?>
+                                <div class="table-responsive">
+                                    <table id="stockCardTable" class="table table-bordered table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Stock No.</th>
+                                                <th>Item</th>
+                                                <th>Description</th>
+                                                <th>Unit</th>
+                                                <th>Date</th>
+                                                <th>Reference</th>
+                                                <th>Issue Qty</th>
+                                                <th>Balance Qty</th>
+                                                <th>Office</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($data as $row): ?>
+                                                <tr>
+                                                    <td><?= htmlspecialchars($row['stock_no']) ?></td>
+                                                    <td><?= htmlspecialchars($row['item']) ?></td>
+                                                    <td><?= htmlspecialchars($row['dscrtn']) ?></td>
+                                                    <td><?= htmlspecialchars($row['unit']) ?></td>
+                                                    <td><?= htmlspecialchars($row['date']) ?></td>
+                                                    <td><?= htmlspecialchars($row['ref']) ?></td>
+                                                    <td><?= (int)$row['issue_qty'] ?></td>
+                                                    <td><?= (int)$row['balance_qty'] ?></td>
+                                                    <td><?= htmlspecialchars($row['office']) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button class="btn btn-accent" onclick="exportStockCardToExcel('<?= $stock_no ?>')">
+                                        <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
+                                    </button>
+                                </div>
+                            <?php else: ?>
+                                <div class="alert alert-warning mb-0">No entries found for stock number <strong><?= htmlspecialchars($stock_no) ?></strong>.</div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </main>
     </div>
