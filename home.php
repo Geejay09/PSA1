@@ -122,11 +122,6 @@ if (!isset($_SESSION['logged_in'])) {
     </div>
 </div>
 
-<!-- Help Button -->
-<button id="helpBtn" class="btn help-btn rounded-circle position-fixed animate__animated animate__bounceIn animate__delay-2s" style="bottom: 20px; right: 20px;">
-    <i class="bi bi-question-lg"></i>
-</button>
-
 <!-- Scripts -->
 <script>
     // Update current time
@@ -155,23 +150,6 @@ if (!isset($_SESSION['logged_in'])) {
             if (result.isConfirmed) {
                 window.location.href = 'index.php'; // Changed to logout.php for proper session destruction
             }
-        });
-    });
-
-    // Help button
-    document.getElementById('helpBtn').addEventListener('click', () => {
-        Swal.fire({
-            title: 'Help Center',
-            html: `
-                <div class="text-start" style="color: var(--text-dark);">
-                    <p style="font-family: 'Roboto', sans-serif;">Need assistance for stock code?</p>
-                    <p style="font-family: 'Roboto', sans-serif;">Click Here <a href="codes.html" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
-                </div>
-            `,
-            icon: 'info',
-            confirmButtonText: 'Got it!',
-            confirmButtonColor: 'var(--accent-color)',
-            background: 'white'
         });
     });
 

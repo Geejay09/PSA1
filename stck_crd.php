@@ -355,7 +355,7 @@ $conn->close();
         Swal.fire({
             title: 'Need Help?',
             html: `
-                <p>View the full code guide <a href="codes.html" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
+                <p>View the full code guide <a href="codes.php" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
             `,
             icon: 'info',
             confirmButtonText: 'Got it!',

@@ -176,7 +176,7 @@ if (!isset($_SESSION['logged_in'])) {
                         <li>IT Support: itsupport@psa.gov.ph</li>
                         <li>Admin Office: admin@psa.gov.ph</li>
                     </ul>
-                    <p style="font-family: 'Roboto', sans-serif;">Or visit our <a href="codes.html" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
+                    <p style="font-family: 'Roboto', sans-serif;">Or visit our <a href="codes.php" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
                 </div>
             `,
             icon: 'info',
