@@ -53,6 +53,8 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Excel Export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
 </head>
 <body>
@@ -169,34 +171,36 @@ $conn->close();
                             <?php if (!empty($data)): ?>
                                 <div class="table-responsive">
                                     <table id="stockCardTable" class="table table-bordered table-hover align-middle">
-                                        <thead>
-                                            <tr>
-                                                <th>Stock No.</th>
-                                                <th>Item</th>
-                                                <th>Description</th>
-                                                <th>Unit</th>
-                                                <th>Date</th>
-                                                <th>Reference</th>
-                                                <th>Issue Qty</th>
-                                                <th>Balance Qty</th>
-                                                <th>Office</th>
+                                    <thead>
+                                        <tr>
+                                            <th>Stock No.</th>
+                                            <th>Item</th>
+                                            <th>Description</th>
+                                            <th>Unit</th>
+                                            <th>Date</th>
+                                            <th>Reference</th>
+                                            <th>Receipt Qty</th> <!-- New Column -->
+                                            <th>Issue Qty</th>
+                                            <th>Balance Qty</th>
+                                            <th>Office</th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($data as $row): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($row['stock_no']) ?></td>
-                                                    <td><?= htmlspecialchars($row['item']) ?></td>
-                                                    <td><?= htmlspecialchars($row['dscrtn']) ?></td>
-                                                    <td><?= htmlspecialchars($row['unit']) ?></td>
-                                                    <td><?= htmlspecialchars($row['date']) ?></td>
-                                                    <td><?= htmlspecialchars($row['ref']) ?></td>
-                                                    <td><?= (int)$row['issue_qty'] ?></td>
-                                                    <td><?= (int)$row['balance_qty'] ?></td>
-                                                    <td><?= htmlspecialchars($row['office']) ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
+                                            </thead>
+                                    <tbody>
+                                    <?php foreach ($data as $row): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row['stock_no']) ?></td>
+                                            <td><?= htmlspecialchars($row['item']) ?></td>
+                                            <td><?= htmlspecialchars($row['dscrtn']) ?></td>
+                                            <td><?= htmlspecialchars($row['unit']) ?></td>
+                                            <td><?= htmlspecialchars($row['date']) ?></td>
+                                            <td><?= htmlspecialchars($row['ref']) ?></td>
+                                            <td><?= (int)$row['receipt_qty'] ?></td> <!-- New Cell -->
+                                            <td><?= (int)$row['issue_qty'] ?></td>
+                                            <td><?= (int)$row['balance_qty'] ?></td>
+                                            <td><?= htmlspecialchars($row['office']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
                                     </table>
                                 </div>
                                 <div class="text-end mt-3">
@@ -232,124 +236,185 @@ $conn->close();
     updateTime();
 
     async function exportStockCardToExcel(stock_no) {
-        const response = await fetch('fetch_stock_card.php?stock_no=' + stock_no);
-        const stockData = await response.json();
+    const response = await fetch('fetch_stock_card.php?stock_no=' + stock_no);
+    const stockData = await response.json();
 
-        const rows = stockData.rows;
-        const itemInfo = stockData.item_info;
+    const rows = stockData.rows;
+    const itemInfo = stockData.item_info;
 
-        const wb = XLSX.utils.book_new();
-        const ws = {};
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Stock Card');
 
-        // Helper style objects
-        const borderAll = {
-            top: { style: "thin" },
-            bottom: { style: "thin" },
-            left: { style: "thin" },
-            right: { style: "thin" }
+    // Font Style
+    const baseFont = { name: 'Times New Roman', size: 11 };
+
+    // Set Column Widths
+    sheet.columns = [
+        { width: 15 }, // A
+        { width: 25 }, // B
+        { width: 10 }, // C
+        { width: 10 }, // D
+        { width: 25 }, // E
+        { width: 20 }, // F
+        { width: 15 }, // G
+    ];
+
+    const borderAll = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+    };
+
+    const makeStyle = ({ bold = false, italic = false, align = 'center', border = false } = {}) => ({
+        font: { ...baseFont, bold, italic },
+        alignment: { horizontal: align, vertical: 'middle', wrapText: true },
+        border: border ? borderAll : undefined,
+    });
+
+    // Row 3
+    sheet.mergeCells('A3:B3');
+    const entityCell = sheet.getCell('A3');
+    entityCell.value = 'Entity: ';
+    entityCell.style = makeStyle({ align: 'left' });
+    entityCell.value = {
+        richText: [
+            { text: 'Entity: ', font: { ...baseFont } },
+            { text: 'Philippine Statistics Authority', font: { ...baseFont, bold: true, underline: true } },
+        ],
+    };
+
+    sheet.mergeCells('A1:G1');
+    const stockCard = sheet.getCell('A1');
+    stockCard.value = 'STOCK CARD';
+    stockCard.style = makeStyle({ bold: true, align: 'center' });
+
+    sheet.mergeCells('E3:F3');
+    const fundClusterCell = sheet.getCell('E3');
+    fundClusterCell.value = 'Fund Cluster:';
+    fundClusterCell.style = makeStyle({ bold: true, align: 'left' });
+
+    // Row 5 to 7 block (Left side A5 to E7)
+    sheet.mergeCells('A5:B5');
+    sheet.getCell('A5').value = `Item: ${itemInfo?.item || ''}`;
+    sheet.getCell('A5').style = makeStyle({ align: 'left' });
+
+    sheet.mergeCells('A6:B6');
+    sheet.getCell('A6').value = `Description: ${itemInfo?.descode || ''}`;
+    sheet.getCell('A6').style = makeStyle({ align: 'left' });
+
+    sheet.mergeCells('A7:B7');
+    sheet.getCell('A7').value = `Unit of Measurement: ${itemInfo?.unit || ''}`;
+    sheet.getCell('A7').style = makeStyle({ align: 'left' });
+
+    // Borders around A5 to A7 block
+    ['A5', 'B5', 'A6', 'B6', 'A7', 'B7'].forEach(cell => {
+        sheet.getCell(cell).border = borderAll;
+    });
+
+    // Right block F5 to G7
+    sheet.mergeCells('F5:G5');
+    sheet.getCell('F5').value = `Stock No.: ${stock_no}`;
+    sheet.getCell('F5').style = makeStyle({ align: 'left' });
+
+    sheet.mergeCells('F6:G6');
+    sheet.getCell('F6').value = 'Re-order Point:';
+    sheet.getCell('F6').style = makeStyle({ align: 'left' });
+
+    sheet.mergeCells('F7:G7');
+    sheet.getCell('F7').value = '';
+    ['F5', 'G5', 'F6', 'G6', 'F7', 'G7'].forEach(cell => {
+        sheet.getCell(cell).border = borderAll;
+    });
+
+
+    let currentRow = 10;
+rows.forEach((entry) => {
+    sheet.getCell(`A${currentRow}`).value = entry.date || '';
+    sheet.getCell(`B${currentRow}`).value = entry.ref || '';
+    sheet.getCell(`C${currentRow}`).value = entry.receipt_qty || '';
+    sheet.getCell(`D${currentRow}`).value = entry.issue_qty || '';
+    sheet.getCell(`E${currentRow}`).value = entry.office || '';
+    sheet.getCell(`F${currentRow}`).value = entry.balance_qty || '';
+    sheet.getCell(`G${currentRow}`).value = entry.days_to_consume || '';
+
+    // Optional: center-align all except B (left-align)
+    for (let col = 1; col <= 7; col++) {
+        const cell = sheet.getRow(currentRow).getCell(col);
+        cell.font = baseFont;
+        cell.alignment = {
+            horizontal: col === 2 ? 'left' : 'center',
+            vertical: 'middle',
         };
-
-        const boldCenter = {
-            font: { bold: true },
-            alignment: { horizontal: "center", vertical: "center" },
-            border: borderAll
-        };
-
-        const normalCenter = {
-            alignment: { horizontal: "center", vertical: "center" },
-            border: borderAll
-        };
-
-        const normalLeft = {
-            alignment: { horizontal: "left", vertical: "center" },
-            border: borderAll
-        };
-
-        // Title
-        ws['A1'] = { v: 'STOCK CARD', t: 's', s: { font: { bold: true, sz: 14 }, alignment: { horizontal: "center" } } };
-
-        // Header Info
-        ws['A2'] = { v: 'Entity Name: Philippine Statistics Authority', t: 's', s: boldCenter };
-        ws['F2'] = { v: 'Fund Cluster:', t: 's', s: normalLeft };
-        ws['A3'] = { v: 'Item: ' + (itemInfo?.item || ''), t: 's', s: normalLeft };
-        ws['F3'] = { v: 'Stock No.: ' + stock_no, t: 's', s: normalLeft };
-        ws['A4'] = { v: 'Description: ' + (itemInfo?.descode || ''), t: 's', s: normalLeft };
-        ws['F4'] = { v: 'Re-order Point:', t: 's', s: normalLeft };
-        ws['A5'] = { v: 'Unit of Measurement: ' + (itemInfo?.unit || ''), t: 's', s: normalLeft };
-
-        // Table Headers
-        ws['A7'] = { v: 'Date', t: 's', s: boldCenter };
-        ws['B7'] = { v: 'Reference', t: 's', s: boldCenter };
-        ws['C7'] = { v: 'Receipt', t: 's', s: boldCenter };
-        ws['E7'] = { v: 'Issue', t: 's', s: boldCenter };
-        ws['G7'] = { v: 'Balance', t: 's', s: boldCenter };
-        ws['I7'] = { v: 'No. of Days to Consume', t: 's', s: boldCenter };
-
-        // Sub-headers
-        ws['C8'] = { v: 'Qty.', t: 's', s: boldCenter };
-        ws['E8'] = { v: 'Qty.', t: 's', s: boldCenter };
-        ws['F8'] = { v: 'Office', t: 's', s: boldCenter };
-        ws['G8'] = { v: 'Qty.', t: 's', s: boldCenter };
-
-        // Dynamic data rows
-        // Insert static row for Balance Forwarded at row 9
-        ws['A9'] = { v: '01/01/2025', t: "s", s: normalCenter };
-        ws['B9'] = { v: 'Balance Forwarded', t: "s", s: normalLeft };
-        ws['G9'] = { v: itemInfo?.initial_qty || 0, t: "n", s: normalCenter };
-        ws['I9'] = { v: '', t: "s", s: normalCenter };  // Blank value for No. of Days to Consume
-
-        // Now insert dynamic data starting from row 10
-        for (let i = 0; i < rows.length; i++) {
-            const entry = rows[i];
-            const row = i + 10;
-
-            ws[`A${row}`] = { v: entry.date || '', t: "s", s: normalCenter };
-            ws[`B${row}`] = { v: entry.ref || '', t: "s", s: normalCenter };
-            ws[`C${row}`] = { v: entry.receipt_qty || '', t: "n", s: normalCenter };
-            ws[`E${row}`] = { v: entry.issue_qty || '', t: "n", s: normalCenter };
-            ws[`F${row}`] = { v: entry.office || '', t: "s", s: normalCenter };
-            ws[`G${row}`] = { v: entry.balance_qty || '', t: "n", s: normalCenter };
-            ws[`I${row}`] = { v: '', t: "s", s: normalCenter };  // Blank value for No. of Days to Consume
-        }
-
-        const totalRows = rows.length + 9;  // One extra row for the static entry
-        ws['!ref'] = `A1:I${totalRows}`;
-
-        // Merge cells
-        ws['!merges'] = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } }, // A1:I1
-            { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } }, // A2:D2
-            { s: { r: 1, c: 5 }, e: { r: 1, c: 8 } }, // F2:I2
-            { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } }, // A3:D3
-            { s: { r: 2, c: 5 }, e: { r: 2, c: 8 } }, // F3:I3
-            { s: { r: 3, c: 0 }, e: { r: 3, c: 3 } }, // A4:D4
-            { s: { r: 3, c: 5 }, e: { r: 3, c: 8 } }, // F4:I4
-            { s: { r: 4, c: 0 }, e: { r: 4, c: 3 } }, // A5:D5
-
-            { s: { r: 6, c: 2 }, e: { r: 6, c: 3 } }, // C7:D7 Receipt
-            { s: { r: 6, c: 4 }, e: { r: 6, c: 5 } }, // E7:F7 Issue
-            { s: { r: 6, c: 6 }, e: { r: 6, c: 7 } }, // G7:H7 Balance
-            { s: { r: 6, c: 8 }, e: { r: 7, c: 8 } }, // I7:I8 No of Days to Consume
-
-            { s: { r: 6, c: 0 }, e: { r: 7, c: 0 } }, // A7:A8 Date
-            { s: { r: 6, c: 1 }, e: { r: 7, c: 1 } }, // B7:B8 Reference
-        ];
-
-        ws['!cols'] = [
-            { wch: 15 },
-            { wch: 20 },
-            { wch: 10 },
-            { wch: 5 },
-            { wch: 10 },
-            { wch: 20 },
-            { wch: 10 },
-            { wch: 5 },
-            { wch: 20 },
-        ];
-
-        XLSX.utils.book_append_sheet(wb, ws, "Stock Card");
-        XLSX.writeFile(wb, `Stock_Card_${stock_no}.xlsx`);
+        cell.border = borderAll;
     }
+
+    currentRow++;
+});
+
+
+    // Table Headers
+    sheet.mergeCells('A8:A9');
+    sheet.getCell('A8').value = 'Date';
+    sheet.getCell('A8').style = makeStyle({ bold: true, border: true });
+
+    sheet.mergeCells('B8:B9');
+    sheet.getCell('B8').value = 'Reference';
+    sheet.getCell('B8').style = makeStyle({ bold: true, border: true });
+
+    sheet.getCell('C8').value = 'Receipt';
+    sheet.getCell('C8').style = makeStyle({ bold: true, italic: true, border: true });
+
+    sheet.getCell('C9').value = 'Qty.';
+    sheet.getCell('C9').style = makeStyle({ italic: true, border: true });
+
+    sheet.mergeCells('D8:D9');
+    sheet.getCell('D8').value = 'Issue';
+    sheet.getCell('D8').style = makeStyle({ bold: true, italic: true, border: true });
+
+    sheet.getCell('E9').value = 'Office';
+    sheet.getCell('E9').style = makeStyle({ border: true });
+
+    sheet.getCell('F8').value = 'Balance';
+    sheet.getCell('F8').style = makeStyle({ bold: true, italic: true, border: true });
+
+    sheet.getCell('F9').value = 'Qty.';
+    sheet.getCell('F9').style = makeStyle({ border: true });
+
+    sheet.mergeCells('G8:G9');
+    sheet.getCell('G8').value = 'No. of Days to Consume';
+    sheet.getCell('G8').style = makeStyle({ bold: true, border: true });
+
+        // Static Balance Forwarded Row (row 9)
+        const startRow = 9;
+    sheet.getRow(startRow).values = [
+        '01/01/2025',
+        'Balance Forwarded',
+        '',
+        '',
+        '',
+        '',
+        itemInfo?.initial_qty || 0,
+        '',
+        ''
+    ];
+
+    // Content Rows Borders (A10:G26)
+    for (let r = 10; r <= 26; r++) {
+        for (let c = 1; c <= 7; c++) {
+            sheet.getRow(r).getCell(c).border = {
+                right: { style: 'thin' }
+            };
+        }
+    }
+
+    // Export the file using FileSaver.js
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, `Stock_Card_${stock_no}.xlsx`);
+}
 
     document.getElementById('helpBtn').addEventListener('click', () => {
         Swal.fire({

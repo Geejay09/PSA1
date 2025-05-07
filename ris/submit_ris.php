@@ -4,6 +4,9 @@ $user = "root";
 $pass = "";
 $db = "dbpsa";
 
+// Enable error reporting for debugging (optional but recommended during development)
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Connect to the database
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
@@ -36,21 +39,22 @@ for ($i = 0; $i < count($stock_nos); $i++) {
     $i_qty = $issued_quantities[$i] ?? 0;
     $remark = $remarks[$i] ?? '';
 
-    // Insert into RIS table
-    $stmt = $conn->prepare("INSERT INTO tbl_ris (division, office, rcc, ris_no, stock_no, item, des, unit, qty, i_qty, remarks, purpose, receiver, fc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // Insert into tbl_ris
+    $stmt = $conn->prepare("INSERT INTO tbl_ris (division, office, rcc, ris_no, stock_no, item, des, unit, qty, i_qty, remarks, purpose, receiver, fc)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssssiiisss", $division, $office, $rcc, $ris_no, $stock_no, $item, $description, $unit, $qty, $i_qty, $remark, $purpose, $receiver, $fc);
     $stmt->execute();
     $stmt->close();
 
-    // Also insert into Stock Card
+    // Insert into tbl_sc (without qty or no_days)
     $entity = "Philippine Statistics Authority";
     $date = date('Y-m-d');
     $ref = $ris_no;
+    $balance_qty = 0; // placeholder
 
-    $stmt2 = $conn->prepare("INSERT INTO tbl_sc (item, dscrtn, unit, stock_no, fund, date, ref, receipt_qty, issue_qty, balance_qty, no_days, entity, office) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $balance_qty = 0; // You can update this with actual logic if needed
-    $no_days = 0;
-    $stmt2->bind_param("ssssssiiisiss", $item, $description, $unit, $stock_no, $fc, $date, $ref, $qty, $i_qty, $balance_qty, $no_days, $entity, $receiver);
+    $stmt2 = $conn->prepare("INSERT INTO tbl_sc (item, dscrtn, unit, stock_no, fund, date, ref, issue_qty, balance_qty, entity, office)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt2->bind_param("sssssssiiis", $item, $description, $unit, $stock_no, $fc, $date, $ref, $i_qty, $balance_qty, $entity, $receiver);
     $stmt2->execute();
     $stmt2->close();
 }

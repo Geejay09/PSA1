@@ -100,8 +100,7 @@ try {
         ];
 
         // Insert into tbl_iar
-        $sql_iar = "INSERT INTO tbl_iar (
-            supplier, pr_no, iar_no, date, property_no, descd, item, unit, quantity,
+        $sql_iar = "INSERT INTO tbl_iar (supplier, pr_no, iar_no, date, property_no, descd, item, unit, quantity,
             invoice_no, rcc, date_inspected, date_recieved, i_officer, custodian, cost
         ) VALUES (
             '{$postData['supplier']}', '{$postData['pr_no']}', '{$postData['iar_no']}', '{$postData['date']}',
@@ -115,13 +114,10 @@ try {
             throw new Exception("tbl_iar insert failed: " . $conn->error);
         }
 
-        // Insert into tbl_sc
-        $sql_sc = "INSERT INTO tbl_sc (
-            stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity
-        ) VALUES (
+        $sql_sc = "INSERT INTO tbl_sc (stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref, office) VALUES (
             '{$data['stock_code']}', '{$data['item']}', '{$data['descd']}', '{$data['unit']}',
             '{$postData['date']}', {$data['quantity']}, '{$postData['fund_cluster']}',
-            'Philippine Statistics Authority'
+            'Philippine Statistics Authority', '{$postData['iar_no']}', '{$postData['custodian']}'
         )";
 
         if (!$conn->query($sql_sc)) {
