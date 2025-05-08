@@ -16,77 +16,6 @@ if ($conn->connect_error) {
     die(json_encode(['success' => false, 'message' => 'Database connection failed']));
 }
 
-// Handle Excel export
-if (isset($_POST['export_excel'])) {
-    header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment; filename="RSMI_Report_'.date('Y-m-d').'.xls"');
-    
-    $today = date('Y-m-d');
-    $query = "
-        SELECT ris_no, rcc, stock_no, item, des, unit, qty
-        FROM tbl_ris
-        WHERE DATE(created_at) = CURDATE()
-        ORDER BY ris_no, stock_no
-    ";
-    $result = $conn->query($query);
-    
-    // Group rows by ris_no and calculate stock summary
-    $grouped = [];
-    $stock_summary = [];
-    $grand_total_qty = 0;
-    while ($row = $result->fetch_assoc()) {
-        $grouped[$row['ris_no']][] = $row;
-        
-        // Add to stock summary
-        if (!isset($stock_summary[$row['stock_no']])) {
-            $stock_summary[$row['stock_no']] = 0;
-        }
-        $stock_summary[$row['stock_no']] += $row['qty'];
-        $grand_total_qty += $row['qty'];
-    }
-    
-    echo "<table border='1'>";
-    echo "<tr><th colspan='7'>REPORT OF SUPPLIES AND MATERIALS ISSUED</th></tr>";
-    echo "<tr><th>RIS No</th><th>RCC</th><th>Stock No.</th><th>Item</th><th>Unit</th><th>Quantity</th><th>Unit Cost</th></tr>";
-    
-    foreach ($grouped as $ris_no => $items) {
-        foreach ($items as $row) {
-            echo "<tr>";
-            echo "<td>".$ris_no."</td>";
-            echo "<td>".$row['rcc']."</td>";
-            echo "<td>".$row['stock_no']."</td>";
-            echo "<td>".$row['item']."(item)".$row['des']."(des)</td>";
-            echo "<td>".$row['unit']."</td>";
-            echo "<td>".$row['qty']."</td>";
-            echo "<td></td>";
-            echo "</tr>";
-        }
-    }
-    
-    echo "</table>";
-    
-    // Add summary table to Excel export
-    echo "<br><br><table border='1'>";
-    echo "<tr><th colspan='2'>Recapitulation</th></tr>";
-    echo "<tr><th>Stock No.</th><th>Quantity</th></tr>";
-    
-    foreach ($stock_summary as $stock_no => $total_qty) {
-        echo "<tr>";
-        echo "<td>".$stock_no."</td>";
-        echo "<td>".$total_qty."</td>";
-        echo "</tr>";
-    }
-    
-    // Add total row to Excel export
-    echo "<tr style='font-weight:bold;'>";
-    echo "<td>Total</td>";
-    echo "<td>".$grand_total_qty."</td>";
-    echo "</tr>";
-    
-    echo "</table>";
-    exit();
-}
-
 $today = date('Y-m-d');
 
 // Fetch only today's entries with the required columns (including description)
@@ -129,6 +58,9 @@ while ($row = $result->fetch_assoc()) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>          
+
     
 </head>
 <body>
@@ -308,11 +240,12 @@ while ($row = $result->fetch_assoc()) {
                             </table>
                         </div>
 
-                        <div class="text-center mt-4">
-                            <button type="submit" name="export_excel" class="btn btn-accent">
-                                <i class="bi bi-file-excel me-2"></i> Export to Excel
-                            </button>
-                        </div>
+                        <!-- Export Button -->
+                    <div class="text-center mt-4">
+                        <button class="btn btn-accent" onclick="exportRISReport()">
+                            <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
+                        </button>
+                    </div>
                     <?php endif; ?>
                 </form>
             </div>
@@ -373,6 +306,127 @@ while ($row = $result->fetch_assoc()) {
             this.classList.add('active');
         });
     });
+
+    //excel export
+
+    async function exportRISReport() {
+    try {
+        // Create workbook and worksheet
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("RSMI");
+
+        // Set up layout
+        sheet.columns = [
+            { width: 12 }, { width: 25 }, { width: 15 }, { width: 35 },
+            { width: 10 }, { width: 10 }, { width: 15 }, { width: 15 }
+        ];
+
+        // Add title and headers
+        sheet.mergeCells("A1:H1");
+        sheet.getCell("A1").value = "REPORT OF SUPPLIES AND MATERIALS ISSUED";
+        sheet.getCell("A1").alignment = { horizontal: "center" };
+        sheet.getCell("A1").font = { bold: true, size: 13 };
+
+        sheet.getCell("A2").value = "Entity Name: Philippine Statistics Authority";
+        sheet.getCell("F2").value = "Serial No.:";
+        sheet.getCell("A3").value = "Fund Cluster: Regular Fund";
+        sheet.getCell("F3").value = "Date: " + new Date().toLocaleDateString();
+
+        sheet.addRow([]);
+        sheet.addRow([]);
+
+        // Table headers
+        const headers = ["RIS No.", "Responsibility Center Code", "Stock No.", "Item", "Unit", "Quantity", "Unit Cost", "Amount"];
+        const headerRow = sheet.addRow(headers);
+        headerRow.eachCell(cell => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: "center" };
+            cell.border = {
+                top: { style: 'thin' }, bottom: { style: 'thin' },
+                left: { style: 'thin' }, right: { style: 'thin' }
+            };
+        });
+
+        // Get all data tables from the page
+        const tables = document.querySelectorAll('.table-responsive table');
+        const stockSummary = {};
+        let totalQty = 0;
+
+        // Process each table
+        tables.forEach(table => {
+            const risNo = table.closest('.table-responsive').previousElementSibling.textContent.replace('RIS No:', '').trim();
+            const rows = table.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const stockNo = cells[1].textContent;
+                const qty = parseInt(cells[4].textContent);
+                
+                // Add to Excel sheet
+                sheet.addRow([
+                    risNo,
+                    cells[0].textContent, // RCC
+                    stockNo,
+                    cells[2].textContent, // Item + Description
+                    cells[3].textContent, // Unit
+                    qty,
+                    "", // Unit Cost
+                    ""  // Amount
+                ]);
+
+                // Update stock summary
+                stockSummary[stockNo] = (stockSummary[stockNo] || 0) + qty;
+                totalQty += qty;
+            });
+        });
+
+        // Add recap section
+        sheet.addRow([]);
+        sheet.addRow([]);
+        sheet.getCell(`A${sheet.lastRow.number + 1}`).value = "Recapitulation:";
+        sheet.getCell(`A${sheet.lastRow.number}`).font = { bold: true };
+
+        const recapHeader = sheet.addRow(["Stock No.", "Quantity"]);
+        recapHeader.font = { bold: true };
+
+        // Add recap data
+        for (const [stockNo, qty] of Object.entries(stockSummary)) {
+            sheet.addRow([stockNo, qty]);
+        }
+
+        // Add total row
+        const totalRow = sheet.addRow(["Total", totalQty]);
+        totalRow.font = { bold: true };
+
+        // Add footer and signatures
+        sheet.addRow([]);
+        sheet.addRow([]);
+
+        const footerStart = sheet.lastRow.number + 1;
+        sheet.mergeCells(`A${footerStart}:H${footerStart}`);
+        sheet.getCell(`A${footerStart}`).value = "I hereby certify to the correctness of the above information.";
+
+        const signatureRow1 = sheet.lastRow.number + 2;
+        sheet.getCell(`A${signatureRow1}`).value = "ALEXANDER G. AUSTRIA";
+        sheet.getCell(`A${signatureRow1 + 1}`).value = "Signature over Printed Name of Supply and/or Property Custodian";
+
+        sheet.getCell(`F${signatureRow1}`).value = "ARCHIE C. FERRER";
+        sheet.getCell(`F${signatureRow1 + 1}`).value = "Signature over Printed Name of Designated Accounting Staff";
+        sheet.getCell(`F${signatureRow1 + 2}`).value = "Date: " + new Date().toLocaleDateString();
+
+        // Generate and download the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), `RSMI_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+        
+    } catch (error) {
+        console.error("Export error:", error);
+        Swal.fire({
+            title: 'Export Failed',
+            text: 'An error occurred while exporting to Excel: ' + error.message,
+            icon: 'error'
+        });
+    }
+}
 </script>
 </body>
 <style>
