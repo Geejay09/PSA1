@@ -235,6 +235,7 @@ $conn->close();
     setInterval(updateTime, 1000);
     updateTime();
 
+    // start of export
     async function exportStockCardToExcel(stock_no) {
     const response = await fetch('fetch_stock_card.php?stock_no=' + stock_no);
     const stockData = await response.json();
@@ -250,11 +251,11 @@ $conn->close();
 
     // Set Column Widths
     sheet.columns = [
-        { width: 15 }, // A
-        { width: 25 }, // B
-        { width: 10 }, // C
-        { width: 10 }, // D
-        { width: 25 }, // E
+        { width: 25 }, // A
+        { width: 40 }, // B
+        { width: 20 }, // C
+        { width: 20 }, // D
+        { width: 20 }, // E
         { width: 20 }, // F
         { width: 15 }, // G
     ];
@@ -276,7 +277,7 @@ $conn->close();
     sheet.mergeCells('A3:B3');
     const entityCell = sheet.getCell('A3');
     entityCell.value = 'Entity: ';
-    entityCell.style = makeStyle({ align: 'left' });
+    entityCell.style = makeStyle({ bold: true, align: 'left' });
     entityCell.value = {
         richText: [
             { text: 'Entity: ', font: { ...baseFont } },
@@ -289,26 +290,26 @@ $conn->close();
     stockCard.value = 'STOCK CARD';
     stockCard.style = makeStyle({ bold: true, align: 'center' });
 
-    sheet.mergeCells('E3:F3');
+    sheet.mergeCells('E3:G3');
     const fundClusterCell = sheet.getCell('E3');
     fundClusterCell.value = 'Fund Cluster:';
     fundClusterCell.style = makeStyle({ bold: true, align: 'left' });
 
     // Row 5 to 7 block (Left side A5 to E7)
-    sheet.mergeCells('A5:B5');
+    sheet.mergeCells('A5:E5');
     sheet.getCell('A5').value = `Item: ${itemInfo?.item || ''}`;
-    sheet.getCell('A5').style = makeStyle({ align: 'left' });
+    sheet.getCell('A5').style = makeStyle({ align: 'left' }),
 
-    sheet.mergeCells('A6:B6');
+    sheet.mergeCells('A6:E6');
     sheet.getCell('A6').value = `Description: ${itemInfo?.descode || ''}`;
     sheet.getCell('A6').style = makeStyle({ align: 'left' });
 
-    sheet.mergeCells('A7:B7');
+    sheet.mergeCells('A7:E7');
     sheet.getCell('A7').value = `Unit of Measurement: ${itemInfo?.unit || ''}`;
     sheet.getCell('A7').style = makeStyle({ align: 'left' });
 
     // Borders around A5 to A7 block
-    ['A5', 'B5', 'A6', 'B6', 'A7', 'B7'].forEach(cell => {
+    ['A5', 'B5', 'A6', 'B6', 'A7', 'B7', 'C5', 'C6', 'C7'].forEach(cell => {
         sheet.getCell(cell).border = borderAll;
     });
 
@@ -328,8 +329,8 @@ $conn->close();
     });
 
 
-    let currentRow = 10;
-rows.forEach((entry) => {
+    let currentRow = 11;
+    rows.forEach((entry) => {
     sheet.getCell(`A${currentRow}`).value = entry.date || '';
     sheet.getCell(`B${currentRow}`).value = entry.ref || '';
     sheet.getCell(`C${currentRow}`).value = entry.receipt_qty || '';
@@ -343,7 +344,7 @@ rows.forEach((entry) => {
         const cell = sheet.getRow(currentRow).getCell(col);
         cell.font = baseFont;
         cell.alignment = {
-            horizontal: col === 2 ? 'left' : 'center',
+            horizontal: col === 2 ? 'left' : 'left',
             vertical: 'middle',
         };
         cell.border = borderAll;
@@ -356,11 +357,23 @@ rows.forEach((entry) => {
     // Table Headers
     sheet.mergeCells('A8:A9');
     sheet.getCell('A8').value = 'Date';
-    sheet.getCell('A8').style = makeStyle({ bold: true, border: true });
+    ['A8', 'A9'].forEach(cell => {
+    sheet.getCell(cell).style = makeStyle({
+        bold: true,
+        italic: true,
+        border: { bottom: { style: 'thin' } }
+        });
+    });
 
     sheet.mergeCells('B8:B9');
     sheet.getCell('B8').value = 'Reference';
-    sheet.getCell('B8').style = makeStyle({ bold: true, border: true });
+    ['B8', 'B9'].forEach(cell => {
+    sheet.getCell(cell).style = makeStyle({
+        bold: true,
+        italic: true,
+        border: { bottom: { style: 'thin' } }
+        });
+    });
 
     sheet.getCell('C8').value = 'Receipt';
     sheet.getCell('C8').style = makeStyle({ bold: true, italic: true, border: true });
@@ -368,36 +381,66 @@ rows.forEach((entry) => {
     sheet.getCell('C9').value = 'Qty.';
     sheet.getCell('C9').style = makeStyle({ italic: true, border: true });
 
-    sheet.mergeCells('D8:D9');
+    sheet.mergeCells('D8:E8');
     sheet.getCell('D8').value = 'Issue';
     sheet.getCell('D8').style = makeStyle({ bold: true, italic: true, border: true });
 
+    sheet.getCell('D9').value = 'Qty.';
+    sheet.getCell('D9').style = makeStyle({ border: true });
+
     sheet.getCell('E9').value = 'Office';
     sheet.getCell('E9').style = makeStyle({ border: true });
+    
+    // Merge
+    sheet.mergeCells('F8:F9');
+    sheet.getCell('F8').value = 'Balance Qty';
 
-    sheet.getCell('F8').value = 'Balance';
-    sheet.getCell('F8').style = makeStyle({ bold: true, italic: true, border: true });
+    // Style both F8 and F9 for borders
+    ['F8', 'F9'].forEach(cell => {
+    sheet.getCell(cell).style = makeStyle({
+        bold: true,
+        italic: true,
+        border: { bottom: { style: 'thin' } }  // bottom border only
+        });
+    });
 
-    sheet.getCell('F9').value = 'Qty.';
-    sheet.getCell('F9').style = makeStyle({ border: true });
 
     sheet.mergeCells('G8:G9');
     sheet.getCell('G8').value = 'No. of Days to Consume';
-    sheet.getCell('G8').style = makeStyle({ bold: true, border: true });
+
+    ['G8', 'G9'].forEach(cell => {
+    sheet.getCell(cell).style = makeStyle({
+        bold: true,
+        italic: true,
+        border: {
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+        }
+        });
+    });
 
         // Static Balance Forwarded Row (row 9)
-        const startRow = 9;
-    sheet.getRow(startRow).values = [
+        const startRow = 10;
+        const row = sheet.getRow(startRow);
+        row.values = [
         '01/01/2025',
         'Balance Forwarded',
         '',
         '',
         '',
         '',
-        itemInfo?.initial_qty || 0,
+        '',
         '',
         ''
-    ];
+];
+
+// Apply border to each cell in the row
+    row.eachCell({ includeEmpty: true }, (cell) => {
+    cell.border = {
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+});
 
     // Content Rows Borders (A10:G26)
     for (let r = 10; r <= 26; r++) {
@@ -415,6 +458,8 @@ rows.forEach((entry) => {
     });
     saveAs(blob, `Stock_Card_${stock_no}.xlsx`);
 }
+
+//end of excel export
 
     document.getElementById('helpBtn').addEventListener('click', () => {
         Swal.fire({
