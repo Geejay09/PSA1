@@ -234,11 +234,11 @@ if (!isset($_SESSION['logged_in'])) {
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="date" name="final_date_received" class="form-control" required>
+                                <input type="date" name="final_date_received" class="form-control">
                                 <label>Date Received</label>
                             </div>
                             <div class="form-floating">
-                                <input type="text" name="custodian" class="form-control" placeholder="Enter name" required>
+                                <input type="text" name="custodian" class="form-control" placeholder="Enter name">
                                 <label>Custodian</label>
                             </div>
                         </div>

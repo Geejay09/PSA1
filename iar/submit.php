@@ -114,10 +114,10 @@ try {
             throw new Exception("tbl_iar insert failed: " . $conn->error);
         }
 
-        $sql_sc = "INSERT INTO tbl_sc (stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref, office) VALUES (
+        $sql_sc = "INSERT INTO tbl_sc (stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref) VALUES (
             '{$data['stock_code']}', '{$data['item']}', '{$data['descd']}', '{$data['unit']}',
             '{$postData['date']}', {$data['quantity']}, '{$postData['fund_cluster']}',
-            'Philippine Statistics Authority', '{$postData['iar_no']}', '{$postData['custodian']}'
+            'Philippine Statistics Authority', '{$postData['iar_no']}'
         )";
 
         if (!$conn->query($sql_sc)) {
