@@ -17,66 +17,53 @@ if ($conn->connect_error) {
 
 // 1. Get and validate single fields
 $requiredSingleFields = [
-    'supplier', 'pr_no', 'iar_no', 'date', 'invoice_no',
+    'supplier', 'pr_no', 'iar_no', 'date',
     'responsibility_center', 'fund_cluster', 'date_inspected',
     'final_date_received', 'i_officer', 'custodian'
 ];
 
 $postData = [];
 foreach ($requiredSingleFields as $field) {
-    if (empty($_POST[$field])) {
+    if (!isset($_POST[$field]) || $_POST[$field] === '') {
         echo json_encode(['success' => false, 'message' => "Missing required field: $field"]);
         exit;
     }
     $postData[$field] = $_POST[$field];
 }
+$postData['invoice_no'] = $_POST['invoice_no'] ?? '';
 
-// 2. Get and normalize array fields - CRITICAL FIX
+// 2. Normalize array fields
 $arrayFields = [
     'stock_code' => 'stock_code',
     'item' => 'item',
-    'dscrtn' => 'descd',  // Note: Your HTML uses 'dscrtn[]' but database expects 'descd'
+    'dscrtn' => 'descd',
     'unit' => 'unit',
     'quantity' => 'quantity',
     'cost' => 'cost'
 ];
 
 $itemData = [];
-$entryCount = null;
+$entryCount = 0;
 
 foreach ($arrayFields as $formField => $dbField) {
-    // Handle both array and non-array inputs safely
-    if (!isset($_POST[$formField])) {
-        $itemData[$dbField] = [];
-    } else {
-        $itemData[$dbField] = is_array($_POST[$formField]) ? $_POST[$formField] : [$_POST[$formField]];
-    }
-    
-    // Remove empty values but preserve array structure
-    $itemData[$dbField] = array_values(array_filter($itemData[$dbField], function($value) {
-        return $value !== '' && $value !== null;
-    }));
+    // Get and clean array
+    $inputArray = isset($_POST[$formField]) ? (array)$_POST[$formField] : [];
+    $cleanedArray = [];
 
-    // Set initial count or verify consistency
-    if ($entryCount === null) {
-        $entryCount = count($itemData[$dbField]);
-    } elseif (count($itemData[$dbField]) !== $entryCount) {
-        error_log("ARRAY MISMATCH:\n" . print_r([
-            'field' => $formField,
-            'expected' => $entryCount,
-            'actual' => count($itemData[$dbField]),
-            'values' => $itemData[$dbField]
-        ], true));
-        
-        echo json_encode([
-            'success' => false,
-            'message' => "Number of items doesn't match for field: $formField",
-            'details' => [
-                'expected_count' => $entryCount,
-                'actual_count' => count($itemData[$dbField])
-            ]
-        ]);
-        exit;
+    foreach ($inputArray as $val) {
+        $cleanedArray[] = trim($val);
+    }
+
+    $itemData[$dbField] = $cleanedArray;
+
+    // Set the maximum entry count based on actual inputs
+    $entryCount = max($entryCount, count($cleanedArray));
+}
+
+// Pad all arrays to the same length
+foreach ($itemData as $key => $arr) {
+    while (count($itemData[$key]) < $entryCount) {
+        $itemData[$key][] = '';
     }
 }
 
@@ -84,23 +71,23 @@ foreach ($arrayFields as $formField => $dbField) {
 $conn->begin_transaction();
 try {
     for ($i = 0; $i < $entryCount; $i++) {
-        // Skip if essential fields are empty
         if (empty($itemData['stock_code'][$i]) || empty($itemData['item'][$i])) {
-            continue;
+            continue; // Skip incomplete rows
         }
 
-        // Prepare data with proper escaping and defaults
+        // Prepare and sanitize values
         $data = [
-            'stock_code' => $conn->real_escape_string($itemData['stock_code'][$i] ?? ''),
-            'item' => $conn->real_escape_string($itemData['item'][$i] ?? ''),
-            'descd' => $conn->real_escape_string($itemData['descd'][$i] ?? ''),
-            'unit' => $conn->real_escape_string($itemData['unit'][$i] ?? 'pc'),
-            'quantity' => (int)($itemData['quantity'][$i] ?? 0),
-            'cost' => (float)($itemData['cost'][$i] ?? 0)
+            'stock_code' => $conn->real_escape_string($itemData['stock_code'][$i]),
+            'item' => $conn->real_escape_string($itemData['item'][$i]),
+            'descd' => $conn->real_escape_string($itemData['descd'][$i]),
+            'unit' => $conn->real_escape_string($itemData['unit'][$i] ?: 'pc'),
+            'quantity' => (int)($itemData['quantity'][$i] ?: 0),
+            'cost' => (float)($itemData['cost'][$i] ?: 0)
         ];
 
         // Insert into tbl_iar
-        $sql_iar = "INSERT INTO tbl_iar (supplier, pr_no, iar_no, date, property_no, descd, item, unit, quantity,
+        $sql_iar = "INSERT INTO tbl_iar (
+            supplier, pr_no, iar_no, date, property_no, descd, item, unit, quantity,
             invoice_no, rcc, date_inspected, date_recieved, i_officer, custodian, cost
         ) VALUES (
             '{$postData['supplier']}', '{$postData['pr_no']}', '{$postData['iar_no']}', '{$postData['date']}',
@@ -114,7 +101,10 @@ try {
             throw new Exception("tbl_iar insert failed: " . $conn->error);
         }
 
-        $sql_sc = "INSERT INTO tbl_sc (stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref) VALUES (
+        // Insert into tbl_sc
+        $sql_sc = "INSERT INTO tbl_sc (
+            stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref
+        ) VALUES (
             '{$data['stock_code']}', '{$data['item']}', '{$data['descd']}', '{$data['unit']}',
             '{$postData['date']}', {$data['quantity']}, '{$postData['fund_cluster']}',
             'Philippine Statistics Authority', '{$postData['iar_no']}'
@@ -135,3 +125,4 @@ try {
     $conn->close();
     ob_end_flush();
 }
+?>

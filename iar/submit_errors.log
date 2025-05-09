@@ -794,3 +794,80 @@ Array
 
 )
 
+[09-May-2025 04:27:33 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 04:27:45 Europe/Berlin] PHP Warning:  Undefined array key "invoice_no" in C:\xampp\htdocs\PSA1\iar\submit.php on line 108
+[09-May-2025 04:27:57 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 04:28:06 Europe/Berlin] PHP Warning:  Undefined array key "invoice_no" in C:\xampp\htdocs\PSA1\iar\submit.php on line 108
+[09-May-2025 04:34:04 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 04:34:15 Europe/Berlin] PHP Warning:  Undefined array key "invoice_no" in C:\xampp\htdocs\PSA1\iar\submit.php on line 107
+[09-May-2025 04:48:10 Europe/Berlin] PHP Warning:  Undefined array key "invoice_no" in C:\xampp\htdocs\PSA1\iar\submit.php on line 108
+[09-May-2025 04:48:38 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 05:29:13 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 05:32:44 Europe/Berlin] ARRAY MISMATCH:
+Array
+(
+    [field] => cost
+    [expected] => 1
+    [actual] => 0
+    [values] => Array
+        (
+        )
+
+)
+
+[09-May-2025 05:36:58 Europe/Berlin] PHP Warning:  Undefined array key "invoice_no" in C:\xampp\htdocs\PSA1\iar\submit.php on line 108
