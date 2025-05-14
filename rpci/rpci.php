@@ -123,10 +123,13 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
                 <h2 class="text-center mb-4 page-title">REPORT ON PHYSICAL COUNT OF INVENTORIES</h2>
                 <!-- Empty content area for your implementation -->
                  <div class="form-floating">
-                    <input type="date" name="date" class="form-control" required>
+                    <input type="date" id="reportDate" name="date" class="form-control" required>
                     <label>Date</label>
                 </div>
-                <button onclick="generateReport()">Download Inventory Report</button>
+</br>
+                <button class="btn btn-accent" onclick="generateReport()">
+                    <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
+                </button>
             </div>
                  <h1>Stock Item List</h1>
                  <table>    
@@ -183,10 +186,10 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
                 { header: 'Article', width: 25 },
                 { header: 'Description', width: 30 },
                 { header: 'Stock Number', width: 20 },
-                { header: 'Unit of Measure', width: 15 },
+                { header: 'Unit of Measure', width: 18 },
                 { header: 'Unit Value', width: 20 },
-                { header: 'Balance Per Card (Quantity)', width: 17 },
-                { header: 'On Hand Per Count (Quantity)', width: 17 },
+                { header: 'Balance Per Card (Quantity)', width: 20 },
+                { header: 'On Hand Per Count (Quantity)', width: 20 },
                 { header: 'Total Value', width: 25 },
                 { header: 'Shortage/Overage Quantity', width: 10 },
                 { header: 'Shortage/Overage Value', width: 15 },
@@ -208,111 +211,120 @@ column1.forEach(col => {
             // Common header for all pages
             sheet.mergeCells('A1:K1');
             sheet.getCell('A1').value = 'Appendix 66';
-            sheet.getCell('A1').font = { bold: true };
+            sheet.getCell('A1').font = { italic: true, size: 16, name: 'Times New Roman' };
             sheet.getCell('A1').alignment = { horizontal: 'right' };
+
+            sheet.getRow(2).height = 2;
+            sheet.getRow(7).height = 2;
+            sheet.getRow(9).height = 2;
 
             sheet.mergeCells('A3:K3');
             sheet.getCell('A3').value = 'REPORT ON THE PHYSICAL COUNT OF INVENTORIES';
-            sheet.getCell('A3').font = { bold: true };
+            sheet.getCell('A3').font = { bold: true, size: 16, name: 'Times New Roman' };
             sheet.getCell('A3').alignment = { horizontal: 'center' };
 
             sheet.mergeCells('A4:K4');
             sheet.getCell('A4').value = 'Office Supplies Inventory';
-            sheet.getCell('A4').font = { bold: true };
+            sheet.getCell('A4').font = { bold: true, size: 12, name: 'Times New Roman' };
             sheet.getCell('A4').alignment = { horizontal: 'center' };
 
             sheet.mergeCells('A5:K5');
             sheet.getCell('A5').value = '(Type of Inventory Item)';
-            sheet.getCell('A5').font = { bold: false };
+            sheet.getCell('A5').font = { bold: false, size: 10, name: 'Times New Roman'};
             sheet.getCell('A5').alignment = { horizontal: 'center' };
 
+            //dynamic date
+            const dateInput = document.getElementById('reportDate').value;
+const formattedDate = new Date(dateInput).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+});
+            sheet.getCell('A6').value = `As at ${formattedDate}`;
             sheet.mergeCells('A6:K6');
-            sheet.getCell('A6').value = 'As at (Date)';
-            sheet.getCell('A6').font = { bold: true };
+            sheet.getCell('A6').font = { bold: true, size: 12, name: 'Times New Roman' };
             sheet.getCell('A6').alignment = { horizontal: 'center' };
 
             // Sub-headers
             sheet.mergeCells('A8:B8');
             sheet.getCell('A8').value = 'Fund Cluster: Regular Fund';
-            sheet.getCell('A8').font = { bold: true };
+            sheet.getCell('A8').font = { bold: true, name: 'Times New Roman', underline: true };
             sheet.getCell('A8').alignment = { horizontal: 'left' };
 
             sheet.mergeCells('A10:K10');
             sheet.getCell('A10').value = 'For which Alexander G. Austria, Administrative Officer I(Supply and Records Officer), Philippine Statistics Authority is accountable having assumed such';
-            sheet.getCell('A10').font = { bold: true };
+            sheet.getCell('A10').font = { bold: true, size: 11, name: 'Times New Roman', underline: true };
             sheet.getCell('A10').alignment = { horizontal: 'left' };
 
             sheet.mergeCells('A11:B11');
             sheet.getCell('A11').value = 'Accountability on August 22, 2018';
-            sheet.getCell('A11').font = { bold: true };
+            sheet.getCell('A11').font = { bold: true, size: 11, name: 'Times New Roman', underline: true };
             sheet.getCell('A11').alignment = { horizontal: 'left' };
 
             // Column headers
             sheet.mergeCells('A13:A15');
             sheet.getCell('A13').value = 'Article';
-            sheet.getCell('A13').font = { bold: true };
-            sheet.getCell('A13').alignment = { horizontal: 'center' };
+            sheet.getCell('A13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('A13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('B13:B15');
             sheet.getCell('B13').value = 'Description';
-            sheet.getCell('B13').font = { bold: true };
-            sheet.getCell('B13').alignment = { horizontal: 'center' };
+            sheet.getCell('B13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('B13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('C13:C15');
             sheet.getCell('C13').value = 'Stock Number';
-            sheet.getCell('C13').font = { bold: true };
-            sheet.getCell('C13').alignment = { horizontal: 'center' };
+            sheet.getCell('C13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('C13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('D13:D15');
             sheet.getCell('D13').value = 'Unit of Measure';
-            sheet.getCell('D13').font = { bold: true };
-            sheet.getCell('D13').alignment = { horizontal: 'center' };
+            sheet.getCell('D13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('D13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('E13:E15');
             sheet.getCell('E13').value = 'Unit Value';
-            sheet.getCell('E13').font = { bold: true };
-            sheet.getCell('E13').alignment = { horizontal: 'center' };
+            sheet.getCell('E13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('E13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('F13:F14');
             sheet.getCell('F13').value = 'Balance per Card';
-            sheet.getCell('F13').font = { bold: true };
-            sheet.getCell('F13').alignment = { horizontal: 'center' };
+            sheet.getCell('F13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('F13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.getCell('F15').value = '(Quantity)';
-            sheet.getCell('F15').font = { bold: true };
-            sheet.getCell('F15').alignment = { horizontal: 'center' };
+            sheet.getCell('F15').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('F15').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('G13:G14');
             sheet.getCell('G13').value = 'On Hand per Count';
-            sheet.getCell('G13').font = { bold: true };
-            sheet.getCell('G13').alignment = { horizontal: 'center' };
+            sheet.getCell('G13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('G13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.getCell('G15').value = '(Quantity)';
-            sheet.getCell('G15').font = { bold: true };
-            sheet.getCell('G15').alignment = { horizontal: 'center' };
+            sheet.getCell('G15').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('G15').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('H13:H15');
             sheet.getCell('H13').value = 'Total Value';
-            sheet.getCell('H13').font = { bold: true };
-            sheet.getCell('H13').alignment = { horizontal: 'center' };
+            sheet.getCell('H13').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('H13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('I13:J14');
             sheet.getCell('I13').value = 'Shortage/Overage';
-            sheet.getCell('I13').font = { bold: true };
-            sheet.getCell('I13').alignment = { horizontal: 'center' };
+            sheet.getCell('I13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('I13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.getCell('I15').value = 'Quantity';
-            sheet.getCell('I15').font = { bold: true };
+            sheet.getCell('I15').font = { bold: false, size: 11, name: 'Times New Roman' };
             sheet.getCell('I15').alignment = { horizontal: 'center' };
 
             sheet.getCell('J15').value = 'Value';
-            sheet.getCell('J15').font = { bold: true };
-            sheet.getCell('J15').alignment = { horizontal: 'center' };
+            sheet.getCell('J15').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('J15').alignment = { vertical: 'middle', horizontal: 'center' };
 
             sheet.mergeCells('K13:K15');
             sheet.getCell('K13').value = 'Remarks';
-            sheet.getCell('K13').font = { bold: true };
-            sheet.getCell('K13').alignment = { horizontal: 'center' };
+            sheet.getCell('K13').font = { bold: true, size: 11, name: 'Times New Roman' };
+            sheet.getCell('K13').alignment = { vertical: 'middle', horizontal: 'center' };
 
             // Set borders for header rows
             const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
@@ -336,7 +348,7 @@ column1.forEach(col => {
             });
 
             sheet.getCell('B16').value = 'A. OFFICE SUPPLIES';
-            sheet.getCell('B16').font = { bold: true };
+            sheet.getCell('B16').font = { bold: true, size: 11, name: 'Times New Roman' };
             sheet.getCell('B16').alignment = { horizontal: 'center' };
 
             // Add items to the current page (rows 17-38)
@@ -352,6 +364,7 @@ column1.forEach(col => {
                 columns.forEach(col => {
                     const cell = sheet.getCell(`${col}${currentRow}`);
                     setCellBorder(cell);
+                    cell.font = { name: 'Times New Roman', size: 11 }
                 });
                 
                 currentRow++;
@@ -368,57 +381,58 @@ column1.forEach(col => {
 
             // Footer for each page
             sheet.getCell('A39').value = 'PAGE TOTAL';
-            sheet.getCell('A39').font = { bold: true };
+            sheet.getCell('A39').font = { bold: true, size: 11, name: 'Times New Roman' };
             sheet.getCell('A39').alignment = { horizontal: 'left' };
 
             // Signatures section (same for all pages)
-            sheet.getCell('A41').value = 'PREPARED BY:';
-            sheet.getCell('A41').font = { bold: true };
+            sheet.getCell('A41').value = 'Prepared by:';
+            sheet.getCell('A41').font = { bold: false, size: 11, name: 'Times New Roman' };
             sheet.getCell('A41').alignment = { horizontal: 'left' };
 
             sheet.mergeCells('A43:B43');
             sheet.getCell('A43').value = 'ALEXANDER G. AUSTRIA';
-            sheet.getCell('A43').font = { bold: true };
+            sheet.getCell('A43').font = { bold: true, size: 11, name: 'Times New Roman', underline: true };
             sheet.getCell('A43').alignment = { horizontal: 'center' };
 
             sheet.mergeCells('A44:B44');
             sheet.getCell('A44').value = 'Supply and Records Officer';
-            sheet.getCell('A44').font = { bold: false };
+            sheet.getCell('A44').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getRow(44).height = 30;
             sheet.getCell('A44').alignment = { horizontal: 'center' };
 
-            sheet.getCell('B41').value = 'CERTIFIED CORRECT BY:';
-            sheet.getCell('B41').font = { bold: true };
+            sheet.getCell('B41').value = 'Certified Correct by:'
+            sheet.getCell('B41').font = { bold: false, size: 11, name: 'Times New Roman' };
             sheet.getCell('B41').alignment = { horizontal: 'right' };
 
             sheet.mergeCells('C43:E43');
             sheet.getCell('C43').value = 'LIZ T. DUQUE';
-            sheet.getCell('C43').font = { bold: true };
+            sheet.getCell('C43').font = { bold: true, size: 11, name: 'Times New Roman', underline: true };
             sheet.getCell('C43').alignment = { horizontal: 'center' };
 
             sheet.mergeCells('C44:E44');
-            sheet.getCell('C44').value = 'Signature Over Printed Name of Inventory Committee Chair';
-            sheet.getCell('C44').font = { bold: false };
-            sheet.getCell('C44').alignment = { horizontal: 'center' };
+            sheet.getCell('C44').value = 'Signature Over Printed Name of Inventory \nCommittee Chair';
+            sheet.getCell('C44').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('C44').alignment = { horizontal: 'center', wrapText: true };
 
             sheet.mergeCells('F43:H43');
             sheet.getCell('F43').value = 'ENGR. CHERRY GRACE D. AGUSTIN';
-            sheet.getCell('F43').font = { bold: true };
+            sheet.getCell('F43').font = { bold: true, size: 11, name: 'Times New Roman', underline: true };
             sheet.getCell('F43').alignment = { horizontal: 'center' };
 
             sheet.mergeCells('F44:H44');
-            sheet.getCell('F44').value = 'Signature Over Printed Name of Head of Agency/Entity or Authorized Representative';
-            sheet.getCell('F44').font = { bold: false };
-            sheet.getCell('F44').alignment = { horizontal: 'center' };
+            sheet.getCell('F44').value = 'Signature Over Printed Name of Head of \nAgency/Entity or Authorized Representative';
+            sheet.getCell('F44').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('F44').alignment = { horizontal: 'center', wrapText: true };
 
-            sheet.getCell('I41').value = 'NOTED BY:';
-            sheet.getCell('I41').font = { bold: true };
+            sheet.getCell('I41').value = 'Noted by:';
+            sheet.getCell('I41').font = { bold: false, size: 11, name: 'Times New Roman' };
             sheet.getCell('I41').alignment = { horizontal: 'right' };
 
             sheet.mergeCells('J43:K43');
             sheet.mergeCells('J44:K44');
-            sheet.getCell('J44').value = 'Signature over Printed Name of COA Representative';
-            sheet.getCell('J44').font = { bold: false };
-            sheet.getCell('J44').alignment = { horizontal: 'center' };
+            sheet.getCell('J44').value = 'Signature over Printed Name of \nCOA Representative';
+            sheet.getCell('J44').font = { bold: false, size: 11, name: 'Times New Roman' };
+            sheet.getCell('J44').alignment = { horizontal: 'center', wrapText: true };
 
             pageNumber++;
         }
