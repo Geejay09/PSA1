@@ -194,7 +194,7 @@ $conn->close();
                                             <td><?= htmlspecialchars($row['unit']) ?></td>
                                             <td><?= htmlspecialchars($row['date']) ?></td>
                                             <td><?= htmlspecialchars($row['ref']) ?></td>
-                                            <td><?= (int)$row['receipt_qty'] ?></td> <!-- New Cell -->
+                                            <td><?= (int)$row['receipt_qty'] ?></td>
                                             <td><?= (int)$row['issue_qty'] ?></td>
                                             <td><?= (int)$row['balance_qty'] ?></td>
                                             <td><?= htmlspecialchars($row['office']) ?></td>

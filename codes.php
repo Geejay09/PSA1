@@ -66,6 +66,7 @@ function softDelete(id) {
         }
     });
 }
+
 </script>
 
 </body>

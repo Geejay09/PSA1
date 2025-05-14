@@ -4,6 +4,9 @@ if (!isset($_SESSION['logged_in'])) {
     header("Location: ../index.php");
     exit();
 }
+
+$conn = new mysqli("localhost", "root", "", "dbpsa");
+$result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +23,8 @@ if (!isset($_SESSION['logged_in'])) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     
 </head>
 <body>
@@ -70,10 +75,10 @@ if (!isset($_SESSION['logged_in'])) {
             <!-- Data Entry Section -->
             <div class="mb-3">
                 <div class="sidebar-title px-2 py-1 mb-2 small fw-bold">Data Entry</div>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='ris/ris.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../ris/ris.php'">
                     <i class="bi bi-file-earmark-text me-2"></i> Requisition Issuance Slip
                 </button>
-                <button class="btn sidebar-btn mb-1" onclick="location.href='iar/iar.php'">
+                <button class="btn sidebar-btn mb-1" onclick="location.href='../iar/iar.php'">
                     <i class="bi bi-clipboard-check me-2"></i> Issuance and Acceptance Report
                 </button>
             </div>
@@ -116,26 +121,323 @@ if (!isset($_SESSION['logged_in'])) {
         <main class="main-content flex-grow-1 p-4">
             <div class="content-card">
                 <h2 class="text-center mb-4 page-title">REPORT ON PHYSICAL COUNT OF INVENTORIES</h2>
-                
                 <!-- Empty content area for your implementation -->
-                <div class="text-center py-5">
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle-fill me-2"></i>
-                        Content area - To be implemented
-                    </div>
+                 <div class="form-floating">
+                    <input type="date" name="date" class="form-control" required>
+                    <label>Date</label>
                 </div>
+                <button onclick="generateReport()">Download Inventory Report</button>
             </div>
+                 <h1>Stock Item List</h1>
+                 <table>    
+                    <thead>
+                        <tr>
+                            <th>Stock Code</th>
+                            <th>Item</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php while($row = $result->fetch_assoc()): ?>
+                        <tr id="row-<?= $row['id'] ?>">
+                            <td><?= htmlspecialchars($row['stock_code']) ?></td>
+                            <td><?= htmlspecialchars($row['item']) ?></td>
+                            <td><?= htmlspecialchars($row['descode']) ?></td>
+                        </tr>
+                            <?php endwhile; ?>
+                    </tbody>
+                </table>
         </main>
     </div>
 </div>
-
-<!-- Floating Help Button -->
-<button id="helpBtn" class="btn help-btn rounded-circle position-fixed" style="bottom: 20px; right: 20px;">
-    <i class="bi bi-question-lg"></i>
-</button>
-
 <!-- Scripts -->
 <script>
+    //excel export
+
+      async function generateReport() {
+    try {
+        // Fetch items from the server
+        const response = await fetch('fetch_items.php');
+        const items = await response.json();
+
+        const workbook = new ExcelJS.Workbook();
+        let currentRow = 17;
+        let itemIndex = 0;
+        let pageNumber = 1;
+
+        // Helper function to set cell borders
+        function setCellBorder(cell) {
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+        }
+
+        while (itemIndex < items.length) {
+            const sheet = workbook.addWorksheet(`Inventory Report Page ${pageNumber}`);
+            
+            // Set column widths
+            sheet.columns = [
+                { header: 'Article', width: 25 },
+                { header: 'Description', width: 30 },
+                { header: 'Stock Number', width: 20 },
+                { header: 'Unit of Measure', width: 15 },
+                { header: 'Unit Value', width: 20 },
+                { header: 'Balance Per Card (Quantity)', width: 17 },
+                { header: 'On Hand Per Count (Quantity)', width: 17 },
+                { header: 'Total Value', width: 25 },
+                { header: 'Shortage/Overage Quantity', width: 10 },
+                { header: 'Shortage/Overage Value', width: 15 },
+                { header: 'Remarks', width: 15 }
+            ];
+
+            const column1 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
+
+column1.forEach(col => {
+  const cell = sheet.getCell(`${col}39`);
+  cell.border = {
+    top: { style: 'thin' },
+    bottom: { style: 'thin' },
+    left: { style: 'thin' },
+    right: { style: 'thin' }
+  };
+});
+
+            // Common header for all pages
+            sheet.mergeCells('A1:K1');
+            sheet.getCell('A1').value = 'Appendix 66';
+            sheet.getCell('A1').font = { bold: true };
+            sheet.getCell('A1').alignment = { horizontal: 'right' };
+
+            sheet.mergeCells('A3:K3');
+            sheet.getCell('A3').value = 'REPORT ON THE PHYSICAL COUNT OF INVENTORIES';
+            sheet.getCell('A3').font = { bold: true };
+            sheet.getCell('A3').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('A4:K4');
+            sheet.getCell('A4').value = 'Office Supplies Inventory';
+            sheet.getCell('A4').font = { bold: true };
+            sheet.getCell('A4').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('A5:K5');
+            sheet.getCell('A5').value = '(Type of Inventory Item)';
+            sheet.getCell('A5').font = { bold: false };
+            sheet.getCell('A5').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('A6:K6');
+            sheet.getCell('A6').value = 'As at (Date)';
+            sheet.getCell('A6').font = { bold: true };
+            sheet.getCell('A6').alignment = { horizontal: 'center' };
+
+            // Sub-headers
+            sheet.mergeCells('A8:B8');
+            sheet.getCell('A8').value = 'Fund Cluster: Regular Fund';
+            sheet.getCell('A8').font = { bold: true };
+            sheet.getCell('A8').alignment = { horizontal: 'left' };
+
+            sheet.mergeCells('A10:K10');
+            sheet.getCell('A10').value = 'For which Alexander G. Austria, Administrative Officer I(Supply and Records Officer), Philippine Statistics Authority is accountable having assumed such';
+            sheet.getCell('A10').font = { bold: true };
+            sheet.getCell('A10').alignment = { horizontal: 'left' };
+
+            sheet.mergeCells('A11:B11');
+            sheet.getCell('A11').value = 'Accountability on August 22, 2018';
+            sheet.getCell('A11').font = { bold: true };
+            sheet.getCell('A11').alignment = { horizontal: 'left' };
+
+            // Column headers
+            sheet.mergeCells('A13:A15');
+            sheet.getCell('A13').value = 'Article';
+            sheet.getCell('A13').font = { bold: true };
+            sheet.getCell('A13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('B13:B15');
+            sheet.getCell('B13').value = 'Description';
+            sheet.getCell('B13').font = { bold: true };
+            sheet.getCell('B13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('C13:C15');
+            sheet.getCell('C13').value = 'Stock Number';
+            sheet.getCell('C13').font = { bold: true };
+            sheet.getCell('C13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('D13:D15');
+            sheet.getCell('D13').value = 'Unit of Measure';
+            sheet.getCell('D13').font = { bold: true };
+            sheet.getCell('D13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('E13:E15');
+            sheet.getCell('E13').value = 'Unit Value';
+            sheet.getCell('E13').font = { bold: true };
+            sheet.getCell('E13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('F13:F14');
+            sheet.getCell('F13').value = 'Balance per Card';
+            sheet.getCell('F13').font = { bold: true };
+            sheet.getCell('F13').alignment = { horizontal: 'center' };
+
+            sheet.getCell('F15').value = '(Quantity)';
+            sheet.getCell('F15').font = { bold: true };
+            sheet.getCell('F15').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('G13:G14');
+            sheet.getCell('G13').value = 'On Hand per Count';
+            sheet.getCell('G13').font = { bold: true };
+            sheet.getCell('G13').alignment = { horizontal: 'center' };
+
+            sheet.getCell('G15').value = '(Quantity)';
+            sheet.getCell('G15').font = { bold: true };
+            sheet.getCell('G15').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('H13:H15');
+            sheet.getCell('H13').value = 'Total Value';
+            sheet.getCell('H13').font = { bold: true };
+            sheet.getCell('H13').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('I13:J14');
+            sheet.getCell('I13').value = 'Shortage/Overage';
+            sheet.getCell('I13').font = { bold: true };
+            sheet.getCell('I13').alignment = { horizontal: 'center' };
+
+            sheet.getCell('I15').value = 'Quantity';
+            sheet.getCell('I15').font = { bold: true };
+            sheet.getCell('I15').alignment = { horizontal: 'center' };
+
+            sheet.getCell('J15').value = 'Value';
+            sheet.getCell('J15').font = { bold: true };
+            sheet.getCell('J15').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('K13:K15');
+            sheet.getCell('K13').value = 'Remarks';
+            sheet.getCell('K13').font = { bold: true };
+            sheet.getCell('K13').alignment = { horizontal: 'center' };
+
+            // Set borders for header rows
+            const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
+            for (let row = 13; row <= 15; row++) {
+                columns.forEach(col => {
+                    const cell = sheet.getCell(`${col}${row}`);
+                    setCellBorder(cell);
+                });
+            }
+
+            // Gray fill for row 16
+            const grayFill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFDCE0E8' }
+            };
+
+            columns.forEach(col => {
+                const cell = sheet.getCell(`${col}16`);
+                cell.fill = grayFill;
+            });
+
+            sheet.getCell('B16').value = 'A. OFFICE SUPPLIES';
+            sheet.getCell('B16').font = { bold: true };
+            sheet.getCell('B16').alignment = { horizontal: 'center' };
+
+            // Add items to the current page (rows 17-38)
+            currentRow = 17;
+            while (currentRow <= 38 && itemIndex < items.length) {
+                const item = items[itemIndex];
+                
+                sheet.getCell(`A${currentRow}`).value = item.item; // Article
+                sheet.getCell(`B${currentRow}`).value = item.descode; // Description
+                sheet.getCell(`C${currentRow}`).value = item.stock_code; // Stock Number
+                
+                // Set borders for the current row
+                columns.forEach(col => {
+                    const cell = sheet.getCell(`${col}${currentRow}`);
+                    setCellBorder(cell);
+                });
+                
+                currentRow++;
+                itemIndex++;
+            }
+
+            // Set borders for all data rows (16-38)
+            for (let row = 16; row <= 38; row++) {
+                columns.forEach(col => {
+                    const cell = sheet.getCell(`${col}${row}`);
+                    setCellBorder(cell);
+                });
+            }
+
+            // Footer for each page
+            sheet.getCell('A39').value = 'PAGE TOTAL';
+            sheet.getCell('A39').font = { bold: true };
+            sheet.getCell('A39').alignment = { horizontal: 'left' };
+
+            // Signatures section (same for all pages)
+            sheet.getCell('A41').value = 'PREPARED BY:';
+            sheet.getCell('A41').font = { bold: true };
+            sheet.getCell('A41').alignment = { horizontal: 'left' };
+
+            sheet.mergeCells('A43:B43');
+            sheet.getCell('A43').value = 'ALEXANDER G. AUSTRIA';
+            sheet.getCell('A43').font = { bold: true };
+            sheet.getCell('A43').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('A44:B44');
+            sheet.getCell('A44').value = 'Supply and Records Officer';
+            sheet.getCell('A44').font = { bold: false };
+            sheet.getCell('A44').alignment = { horizontal: 'center' };
+
+            sheet.getCell('B41').value = 'CERTIFIED CORRECT BY:';
+            sheet.getCell('B41').font = { bold: true };
+            sheet.getCell('B41').alignment = { horizontal: 'right' };
+
+            sheet.mergeCells('C43:E43');
+            sheet.getCell('C43').value = 'LIZ T. DUQUE';
+            sheet.getCell('C43').font = { bold: true };
+            sheet.getCell('C43').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('C44:E44');
+            sheet.getCell('C44').value = 'Signature Over Printed Name of Inventory Committee Chair';
+            sheet.getCell('C44').font = { bold: false };
+            sheet.getCell('C44').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('F43:H43');
+            sheet.getCell('F43').value = 'ENGR. CHERRY GRACE D. AGUSTIN';
+            sheet.getCell('F43').font = { bold: true };
+            sheet.getCell('F43').alignment = { horizontal: 'center' };
+
+            sheet.mergeCells('F44:H44');
+            sheet.getCell('F44').value = 'Signature Over Printed Name of Head of Agency/Entity or Authorized Representative';
+            sheet.getCell('F44').font = { bold: false };
+            sheet.getCell('F44').alignment = { horizontal: 'center' };
+
+            sheet.getCell('I41').value = 'NOTED BY:';
+            sheet.getCell('I41').font = { bold: true };
+            sheet.getCell('I41').alignment = { horizontal: 'right' };
+
+            sheet.mergeCells('J43:K43');
+            sheet.mergeCells('J44:K44');
+            sheet.getCell('J44').value = 'Signature over Printed Name of COA Representative';
+            sheet.getCell('J44').font = { bold: false };
+            sheet.getCell('J44').alignment = { horizontal: 'center' };
+
+            pageNumber++;
+        }
+
+        // Save the workbook
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), 'Inventory_Report.xlsx');
+    } catch (error) {
+        console.error('Error generating report:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'An error occurred while generating the report.',
+            icon: 'error'
+        });
+    }
+}
+
+    //end of excel export
+
     // Update current time
     function updateTime() {
         const now = new Date();
@@ -164,28 +466,6 @@ if (!isset($_SESSION['logged_in'])) {
             }
         });
     });
-
-    // Help button
-    document.getElementById('helpBtn').addEventListener('click', () => {
-        Swal.fire({
-            title: 'Help Center',
-            html: `
-                <div class="text-start" style="color: var(--text-dark);">
-                    <p style="font-family: 'Roboto', sans-serif;">For assistance with the system, please contact:</p>
-                    <ul style="font-family: 'Roboto', sans-serif;">
-                        <li>IT Support: itsupport@psa.gov.ph</li>
-                        <li>Admin Office: admin@psa.gov.ph</li>
-                    </ul>
-                    <p style="font-family: 'Roboto', sans-serif;">Or visit our <a href="codes.php" target="_blank" style="color: var(--accent-color);">documentation page</a>.</p>
-                </div>
-            `,
-            icon: 'info',
-            confirmButtonText: 'Got it!',
-            confirmButtonColor: 'var(--accent-color)',
-            background: 'white'
-        });
-    });
-
     // Active sidebar link highlighting
     document.querySelectorAll('.sidebar-btn').forEach(link => {
         if (link.href === window.location.href) {
@@ -424,6 +704,24 @@ if (!isset($_SESSION['logged_in'])) {
             padding: 5px 12px;
             border-radius: 20px;
             border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #0a192f;
+            color: white;
         }
         
         /* Responsive */
