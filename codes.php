@@ -11,11 +11,21 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.mins.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
    
 </head>
 <body>
 
 <h1>Stock Item List</h1>
+
+<div>
+<a href="add_item.php">
+    <button class="add">
+        <i class="fa fa-plus-circle"></i> Add Item
+    </button>
+</a>
+</div>
 
 <table>
     <thead>
@@ -23,7 +33,7 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
             <th>Stock Code</th>
             <th>Item</th>
             <th>Description</th>
-            <th>Action</th>
+            <th style="width: 60px;">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -41,11 +51,6 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
     </tbody>
 </table>
 
-<a href="add_item.php">
-    <button class="add">
-        <i class="fa fa-plus-circle"></i> Add Item
-    </button>
-</a>
 <script>
 function softDelete(id) {
     Swal.fire({
@@ -94,6 +99,7 @@ function softDelete(id) {
         td .fa {
             cursor: pointer;
             margin: 0 5px;
+            font-size: 18px;
         }
         td .fa-pen {
             color: #2980b9;
