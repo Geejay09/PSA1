@@ -125,8 +125,14 @@ if (!isset($_SESSION['logged_in'])) {
                         <!-- Left Column -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" name="division" class="form-control" id="division" required>
-                                <label for="division">Division</label>
+                                <select name="fc" id="fc" class="form-select" required>
+                                    <option value="" disabled selected>Select Division</option>
+                                    <option value="Administrative">Administrative</option>
+                                    <option value="Statistical">Statistical</option>
+                                    <option value="Civil Registration">Civil Registration</option>
+                                    <option value="PHILSYS">PHILSYS</option>
+                                </select>
+                                <label for="fc">Division</label>
                             </div>
                             
                             <div class="form-floating mt-3">

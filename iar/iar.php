@@ -228,7 +228,7 @@ if (!isset($_SESSION['logged_in'])) {
                                 <label>Date Inspected</label>
                             </div>
                             <div class="form-floating">
-                                <input type="text" name="i_officer" class="form-control" placeholder="Enter name" required>
+                                <input type="text" name="i_officer" class="form-control" value="Joel N. Pilar">
                                 <label>Inspection Officer</label>
                             </div>
                         </div>
@@ -238,7 +238,7 @@ if (!isset($_SESSION['logged_in'])) {
                                 <label>Date Received</label>
                             </div>
                             <div class="form-floating">
-                                <input type="text" name="custodian" class="form-control" placeholder="Enter name">
+                                <input type="text" name="custodian" class="form-control" value="Alexandar G. Austria">
                                 <label>Custodian</label>
                             </div>
                         </div>
