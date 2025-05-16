@@ -46,7 +46,6 @@ $itemData = [];
 $entryCount = 0;
 
 foreach ($arrayFields as $formField => $dbField) {
-    // Get and clean array
     $inputArray = isset($_POST[$formField]) ? (array)$_POST[$formField] : [];
     $cleanedArray = [];
 
@@ -55,12 +54,9 @@ foreach ($arrayFields as $formField => $dbField) {
     }
 
     $itemData[$dbField] = $cleanedArray;
-
-    // Set the maximum entry count based on actual inputs
     $entryCount = max($entryCount, count($cleanedArray));
 }
 
-// Pad all arrays to the same length
 foreach ($itemData as $key => $arr) {
     while (count($itemData[$key]) < $entryCount) {
         $itemData[$key][] = '';
@@ -72,10 +68,9 @@ $conn->begin_transaction();
 try {
     for ($i = 0; $i < $entryCount; $i++) {
         if (empty($itemData['stock_code'][$i]) || empty($itemData['item'][$i])) {
-            continue; // Skip incomplete rows
+            continue;
         }
 
-        // Prepare and sanitize values
         $data = [
             'stock_code' => $conn->real_escape_string($itemData['stock_code'][$i]),
             'item' => $conn->real_escape_string($itemData['item'][$i]),
@@ -101,13 +96,22 @@ try {
             throw new Exception("tbl_iar insert failed: " . $conn->error);
         }
 
-        // Insert into tbl_sc
+        // Get previous balance_qty for the same stock_no
+        $balance_qty = 0;
+        $sql_balance = "SELECT balance_qty FROM tbl_sc WHERE stock_no = '{$data['stock_code']}' ORDER BY id DESC LIMIT 1";
+        $res = $conn->query($sql_balance);
+        if ($res && $res->num_rows > 0) {
+            $row = $res->fetch_assoc();
+            $balance_qty = (int)$row['balance_qty'];
+        }
+
+        // Insert into tbl_sc with same balance_qty
         $sql_sc = "INSERT INTO tbl_sc (
-            stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref
+            stock_no, item, dscrtn, unit, date, receipt_qty, fund, entity, ref, balance_qty
         ) VALUES (
             '{$data['stock_code']}', '{$data['item']}', '{$data['descd']}', '{$data['unit']}',
             '{$postData['date']}', {$data['quantity']}, '{$postData['fund_cluster']}',
-            'Philippine Statistics Authority', '{$postData['iar_no']}'
+            'Philippine Statistics Authority', '{$postData['iar_no']}', {$balance_qty}
         )";
 
         if (!$conn->query($sql_sc)) {

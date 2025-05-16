@@ -1,6 +1,7 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "dbpsa");
-$result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
+$result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0 ORDER BY stock_code ASC");
+
 ?>
 
 <!DOCTYPE html>

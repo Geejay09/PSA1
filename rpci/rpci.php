@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 $conn = new mysqli("localhost", "root", "", "dbpsa");
-$result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
+$result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0 ORDER BY stock_code ASC");
 ?>
 
 <!DOCTYPE html>
@@ -138,6 +138,7 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
                             <th>Stock Code</th>
                             <th>Item</th>
                             <th>Description</th>
+                            <th>Units</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,6 +147,7 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
                             <td><?= htmlspecialchars($row['stock_code']) ?></td>
                             <td><?= htmlspecialchars($row['item']) ?></td>
                             <td><?= htmlspecialchars($row['descode']) ?></td>
+                            <td><?= htmlspecialchars($row['unit']) ?></td>
                         </tr>
                             <?php endwhile; ?>
                     </tbody>
@@ -359,7 +361,8 @@ const formattedDate = new Date(dateInput).toLocaleDateString('en-US', {
                 sheet.getCell(`A${currentRow}`).value = item.item; // Article
                 sheet.getCell(`B${currentRow}`).value = item.descode; // Description
                 sheet.getCell(`C${currentRow}`).value = item.stock_code; // Stock Number
-                
+                sheet.getCell(`C${currentRow}`).value = item.unit; // unit
+
                 // Set borders for the current row
                 columns.forEach(col => {
                     const cell = sheet.getCell(`${col}${currentRow}`);
