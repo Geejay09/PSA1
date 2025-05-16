@@ -57,9 +57,10 @@ while ($row = $result->fetch_assoc()) {
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>          
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" onerror="console.error('SweetAlert2 failed to load')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js" onerror="console.error('ExcelJS failed to load')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 
     
 </head>
@@ -242,9 +243,7 @@ while ($row = $result->fetch_assoc()) {
 
                         <!-- Export Button -->
                     <div class="text-center mt-4">
-                        <button class="btn btn-accent" onclick="exportRISReport()">
-                            <i class="bi bi-file-earmark-excel me-2"></i> Export to Excel
-                        </button>
+                        <button onclick="exportRISReport()">Export to Excel</button>
                     </div>
                     <?php endif; ?>
                 </form>
@@ -311,122 +310,363 @@ while ($row = $result->fetch_assoc()) {
 
     async function exportRISReport() {
     try {
-        // Create workbook and worksheet
+        if (typeof ExcelJS === 'undefined') throw new Error('ExcelJS not loaded');
+        if (typeof saveAs === 'undefined') throw new Error('FileSaver not loaded');
+
+        // These variables should be passed from PHP using json_encode()
+        const groupedData = <?= json_encode($grouped) ?>;
+        const stockSummary = <?= json_encode($stock_summary) ?>;
+        const grandTotal = <?= json_encode($grand_total_qty) ?>;
+
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet("RSMI");
 
-        // Set up layout
         sheet.columns = [
             { width: 12 }, { width: 25 }, { width: 15 }, { width: 35 },
             { width: 10 }, { width: 10 }, { width: 15 }, { width: 15 }
         ];
 
-        // Add title and headers
-        sheet.mergeCells("A1:H1");
-        sheet.getCell("A1").value = "REPORT OF SUPPLIES AND MATERIALS ISSUED";
-        sheet.getCell("A1").alignment = { horizontal: "center" };
-        sheet.getCell("A1").font = { bold: true, size: 13 };
+        const borderStyle = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
 
-        sheet.getCell("A2").value = "Entity Name: Philippine Statistics Authority";
-        sheet.getCell("F2").value = "Serial No.:";
-        sheet.getCell("A3").value = "Fund Cluster: Regular Fund";
-        sheet.getCell("F3").value = "Date: " + new Date().toLocaleDateString();
+        sheet.getCell('H1').value = 'Appendix 66';
+        sheet.getCell('H1').font = { italic: true, size: 18, name: 'Times New Roman' };
+        sheet.getCell('H1').alignment = { horizontal: 'right' };
 
-        sheet.addRow([]);
-        sheet.addRow([]);
+        sheet.mergeCells('A3:H3');
+        sheet.getCell('A3').value = 'REPORTS ON SUPPLIES AND MATERIALS ISSUED';
+        sheet.getCell('A3').font = { bold: true, size: 14, name: 'Times New Roman' };
+        sheet.getCell('A3').alignment = { horizontal: 'center' };
+
+        sheet.mergeCells('A6:D6');
+        sheet.getCell('A6').value = 'Entity Name: Philippine Statistics Authority';
+        sheet.getCell('A6').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('A6').alignment = { horizontal: 'left' };
+
+        sheet.mergeCells('G6:H6');
+        sheet.getCell('G6').value = 'Serial No:';
+        sheet.getCell('G6').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('G6').alignment = { horizontal: 'left' };
+
+        sheet.mergeCells('A7:C7');
+        sheet.getCell('A7').value = 'Fund Cluster:';
+        sheet.getCell('A7').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('A7').alignment = { horizontal: 'left' };
+
+        sheet.mergeCells('G7:H7');
+        sheet.getCell('G7').value = 'Date:';
+        sheet.getCell('G7').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('G7').alignment = { horizontal: 'left' };
+
+        sheet.mergeCells('A9:F9');
+        sheet.getCell('A9').value = 'To be filled up by the Supply and/or Property Division/Unit';
+        sheet.getCell('A9').font = { italic: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('A9').alignment = { vertical: 'middle', horizontal: 'center' };
+        sheet.getRow(9).height = 25;
+        sheet.getCell('A9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('G9:H9');
+        sheet.getCell('G9').value = 'To be filled up by the Accounting Division/Unit';
+        sheet.getCell('G9').font = { italic: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('G9').alignment = {  vertical: 'middle', horizontal: 'center' };
+        sheet.getCell('G9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
 
         // Table headers
-        const headers = ["RIS No.", "Responsibility Center Code", "Stock No.", "Item", "Unit", "Quantity", "Unit Cost", "Amount"];
-        const headerRow = sheet.addRow(headers);
-        headerRow.eachCell(cell => {
-            cell.font = { bold: true };
-            cell.alignment = { horizontal: "center" };
-            cell.border = {
-                top: { style: 'thin' }, bottom: { style: 'thin' },
-                left: { style: 'thin' }, right: { style: 'thin' }
-            };
-        });
+        const headers = [
+            { cell: 'A10:A11', text: 'RIS No.' },
+            { cell: 'B10:B11', text: 'Responsibility\nCenter\nCode' },
+            { cell: 'C10:C11', text: 'Stock No.' },
+            { cell: 'D10:D11', text: 'Item' },
+            { cell: 'E10:E11', text: 'Unit' },
+            { cell: 'F10:F11', text: 'Quantity' },
+            { cell: 'G10:G11', text: 'Unit Cost' },
+            { cell: 'H10:H11', text: 'Amount' },
+        ];
 
-        // Get all data tables from the page
-        const tables = document.querySelectorAll('.table-responsive table');
-        const stockSummary = {};
-        let totalQty = 0;
-
-        // Process each table
-        tables.forEach(table => {
-            const risNo = table.closest('.table-responsive').previousElementSibling.textContent.replace('RIS No:', '').trim();
-            const rows = table.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                const stockNo = cells[1].textContent;
-                const qty = parseInt(cells[4].textContent);
-                
-                // Add to Excel sheet
-                sheet.addRow([
-                    risNo,
-                    cells[0].textContent, // RCC
-                    stockNo,
-                    cells[2].textContent, // Item + Description
-                    cells[3].textContent, // Unit
-                    qty,
-                    "", // Unit Cost
-                    ""  // Amount
-                ]);
-
-                // Update stock summary
-                stockSummary[stockNo] = (stockSummary[stockNo] || 0) + qty;
-                totalQty += qty;
-            });
-        });
-
-        // Add recap section
-        sheet.addRow([]);
-        sheet.addRow([]);
-        sheet.getCell(`A${sheet.lastRow.number + 1}`).value = "Recapitulation:";
-        sheet.getCell(`A${sheet.lastRow.number}`).font = { bold: true };
-
-        const recapHeader = sheet.addRow(["Stock No.", "Quantity"]);
-        recapHeader.font = { bold: true };
-
-        // Add recap data
-        for (const [stockNo, qty] of Object.entries(stockSummary)) {
-            sheet.addRow([stockNo, qty]);
-        }
-
-        // Add total row
-        const totalRow = sheet.addRow(["Total", totalQty]);
-        totalRow.font = { bold: true };
-
-        // Add footer and signatures
-        sheet.addRow([]);
-        sheet.addRow([]);
-
-        const footerStart = sheet.lastRow.number + 1;
-        sheet.mergeCells(`A${footerStart}:H${footerStart}`);
-        sheet.getCell(`A${footerStart}`).value = "I hereby certify to the correctness of the above information.";
-
-        const signatureRow1 = sheet.lastRow.number + 2;
-        sheet.getCell(`A${signatureRow1}`).value = "ALEXANDER G. AUSTRIA";
-        sheet.getCell(`A${signatureRow1 + 1}`).value = "Signature over Printed Name of Supply and/or Property Custodian";
-
-        sheet.getCell(`F${signatureRow1}`).value = "ARCHIE C. FERRER";
-        sheet.getCell(`F${signatureRow1 + 1}`).value = "Signature over Printed Name of Designated Accounting Staff";
-        sheet.getCell(`F${signatureRow1 + 2}`).value = "Date: " + new Date().toLocaleDateString();
-
-        // Generate and download the file
-        const buffer = await workbook.xlsx.writeBuffer();
-        saveAs(new Blob([buffer]), `RSMI_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
-        
-    } catch (error) {
-        console.error("Export error:", error);
-        Swal.fire({
-            title: 'Export Failed',
-            text: 'An error occurred while exporting to Excel: ' + error.message,
-            icon: 'error'
-        });
+        for (let row = 10; row <= 11; row++) {
+    for (let col = 1; col <= 8; col++) { // A=1 to H=8
+        const cell = sheet.getRow(row).getCell(col);
+        cell.border = borderStyle;
     }
 }
+        sheet.getRow(10).height = 30;
+        sheet.getRow(11).height = 30;
+        sheet.getColumn('A').width = 13;
+        sheet.getColumn('B').width = 10;
+        sheet.getColumn('C').width = 8;
+        sheet.getColumn('D').width = 30;
+        sheet.getColumn('E').width = 9;
+        sheet.getColumn('F').width = 13;
+        sheet.getColumn('G').width = 12;
+        sheet.getColumn('H').width = 30;
+
+
+
+        headers.forEach(h => {
+            sheet.mergeCells(h.cell);
+            const cell = sheet.getCell(h.cell.split(':')[0]);
+            cell.value = h.text;
+            cell.font = { bold: true, size: 11, name: 'Times New Roman' };
+            cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+        });
+
+        // Table data
+        // Table data
+let currentRow = 12;
+for (const risNo in groupedData) {
+    const items = groupedData[risNo];
+    for (const row of items) {
+        sheet.getCell(`A${currentRow}`).value = risNo;
+        sheet.getCell(`B${currentRow}`).value = row.rcc;
+        sheet.getCell(`C${currentRow}`).value = row.stock_no;
+        sheet.getCell(`D${currentRow}`).value = row.item + (row.des ? ' ' + row.des : '');
+        sheet.getCell(`E${currentRow}`).value = row.unit;
+        sheet.getCell(`F${currentRow}`).value = row.qty;
+        currentRow++;
+    }
+}
+
+// Apply left and right borders from A12 to F33
+for (let row = 12; row <= 33; row++) {
+    for (let col of ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']) {
+        sheet.getCell(`${col}${row}`).border = {
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+    }
+}
+
+        // Supply Recapitulation
+        sheet.mergeCells('B35:C35');
+        sheet.getCell('B35').value = 'Recapitulation';
+        sheet.getCell('B35').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('B35').alignment = { horizontal: 'center' };
+        sheet.getCell('B35').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('B36:B37');
+        sheet.getCell('B36').value = 'Stock No.';
+        sheet.getCell('B36').alignment = { horizontal: 'center', vertical: 'middle' };
+        sheet.getCell('B36').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('B36').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('C36:C37');
+        sheet.getCell('C36').value = 'Quantity';
+        sheet.getCell('C36').alignment = { horizontal: 'center', vertical: 'middle' };
+        sheet.getCell('C36').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('C36').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        let recapRow = 38;
+        for (const stockNo in stockSummary) {
+            sheet.getCell(`B${recapRow}`).value = stockNo;
+            sheet.getCell(`C${recapRow}`).value = stockSummary[stockNo];
+            recapRow++;
+        }
+
+        // Apply left and right borders to A38:C53
+        for (let row = 38; row <= 53; row++) {
+        for (let col of ['B', 'C']) {
+        sheet.getCell(`${col}${row}`).border = {
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+        }
+        }
+
+        sheet.getCell(`B${recapRow}`).value = 'Total';
+        sheet.getCell(`C${recapRow}`).value = grandTotal;
+
+        // Accounting Recap Header
+        sheet.mergeCells('F35:H35');
+        sheet.getCell('F35').value = 'Recapitulation';
+        sheet.getCell('F35').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('F35').alignment = { horizontal: 'center' };
+        sheet.getCell('F35').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('F36:F37');
+        sheet.getCell('F36').value = 'Unit Cost';
+        sheet.getCell('F36').alignment = { horizontal: 'center', vertical: 'middle' };
+        sheet.getCell('F36').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('F36').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('G36:G37');
+        sheet.getCell('G36').value = 'Total Cost';
+        sheet.getCell('G36').alignment = { horizontal: 'center', vertical: 'middle' };
+        sheet.getCell('G36').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('G36').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.mergeCells('H36:H37');
+        sheet.getCell('H36').value = 'UACS Object Code';
+        sheet.getCell('H36').alignment = { horizontal: 'center', vertical: 'middle' };
+        sheet.getCell('H36').font = { bold: true, size: 11, name: 'Times New Roman' };
+        sheet.getCell('H36').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        for (let row = 38; row <= 53; row++) {
+        for (let col of ['F', 'G', 'H']) {
+        sheet.getCell(`${col}${row}`).border = {
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+        }
+        }
+
+        sheet.mergeCells('A34:H34');
+        sheet.getCell('A34').border = {
+        top: { style: 'thin' },
+        };
+
+
+        // Footer
+        sheet.mergeCells('A54:E54');
+        sheet.getCell('A54').value = 'I hereby certify to the correctness of the above information';
+        sheet.getCell('A54').alignment = { horizontal: 'center' };
+        sheet.getCell('A54').font = { size: 11, name: 'Times New Roman' };
+        sheet.getRow(57).height = 58;
+
+        sheet.mergeCells('A56:E56');
+        sheet.getCell('A56').value = 'ALEXANDER G. AUSTRIA';
+        sheet.getCell('A56').alignment = { horizontal: 'center' };
+        sheet.getCell('A56').font = { bold: true, size: 11, name: 'Times New Roman' };
+
+        sheet.mergeCells('B57:D57');
+        sheet.getCell('B57').value = 'Signature over the Printed Name of the Supply and/or Property Custodian';
+        sheet.getCell('B57').alignment = { vertical: 'top', horizontal: 'center', wrapText: true };
+        sheet.getCell('B57').font = { size: 11, name: 'Times New Roman' };
+
+        sheet.mergeCells('F54:G54');
+        sheet.getCell('F54').value = 'Posted by:';
+        sheet.getCell('F54').alignment = { horizontal: 'left' };
+        sheet.getCell('F54').font = { size: 11, name: 'Times New Roman' };
+        sheet.getCell('F54').border = {
+        top: { style: 'thin' }
+        };
+
+        sheet.mergeCells('F56:G56');
+        sheet.getCell('F56').value = 'ARCHIE C. FERRER';
+        sheet.getCell('F56').alignment = { horizontal: 'center' };
+        sheet.getCell('F56').font = { size: 11, name: 'Times New Roman' };
+        sheet.getCell('F56').border = {
+        left: { style: 'thin' }
+        };
+
+        sheet.getCell('H56').value = '____________';
+        sheet.getCell('H56').font = { name: 'Times New Roman' };
+
+        sheet.getCell('H57').value = 'Date';
+        sheet.getCell('H57').font = { name: 'Times New Roman' };
+        sheet.getCell('H57').alignment = { vertical: 'top', horizontal: 'left' };
+
+        //border
+        sheet.getCell('A54').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+        };
+
+        sheet.getCell('A55').border = {
+        left: { style: 'thin' },
+        };
+
+        sheet.getCell('A57').border = {
+        left: { style: 'thin' },
+        bottom: {style: 'thin'}
+        };
+
+        sheet.getCell('B57').border = {
+        bottom: {style: 'thin'}
+        };
+
+        sheet.getCell('E57').border = {
+        bottom: {style: 'thin'},
+        right: {style: 'thin'}
+        };
+
+        sheet.getCell('F57').border = {
+        bottom: {style: 'thin'}
+        };
+
+        sheet.getCell('G57').border = {
+        bottom: {style: 'thin'}
+        };
+
+        sheet.getCell('H57').border = {
+        bottom: {style: 'thin'},
+        right: { style: 'thin' }
+        };
+
+        sheet.getCell('H56').border = {
+        right: {style: 'thin'}
+        };
+
+        sheet.getCell('H55').border = {
+        right: {style: 'thin'}
+        };
+
+        sheet.getCell('H54').border = {
+        right: {style: 'thin'},
+        top: { style: 'thin' }
+        };
+
+        sheet.getCell('E55').border = {
+        right: {style: 'thin'}
+        };
+
+        // Save the file
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), 'RSMI_Report.xlsx');
+
+    } catch (error) {
+        alert("Export failed: " + error.message);
+        console.error(error);
+    }
+}
+    
 </script>
 </body>
 <style>
