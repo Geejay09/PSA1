@@ -16,23 +16,7 @@ if ($result->num_rows === 0) {
 
 $row = $result->fetch_assoc();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stock_code = $_POST['stock_code'];
-    $item = $_POST['item'];
-    $descode = $_POST['descode'];
 
-    $conn->query("UPDATE tbl_items SET stock_code='$stock_code', item='$item', descode='$descode' WHERE id=$id");
-    echo "<script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Updated!',
-            text: 'Item has been updated successfully.',
-            confirmButtonColor: '#3085d6'
-        }).then(() => {
-            window.location.href = 'codes.php';
-        });
-    </script>";
-}
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label for="descode">Description:</label>
     <input type="text" id="descode" name="descode" value="<?= htmlspecialchars($row['descode']) ?>" required>
 
+    <label for="descode">Unit   :</label>
+    <input type="text" id="unit" name="unit" value="<?= htmlspecialchars($row['unit']) ?>" required>
+
     <div class="btn-container">
         <button type="submit">Update Item</button>
         <a href="codes.php" class="cancel-btn">Cancel</a>
@@ -65,6 +52,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </form>
 
 </body>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $stock_code = $_POST['stock_code'];
+    $item = $_POST['item'];
+    $descode = $_POST['descode'];
+    $unit = $_POST['unit'];
+
+    $conn->query("UPDATE tbl_items SET stock_code='$stock_code', item='$item', descode='$descode', unit='$unit' WHERE id=$id");
+    echo "<script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Item has been updated successfully.',
+            confirmButtonColor: '#3085d6'
+        }).then(() => {
+            window.location.href = 'codes.php';
+        });
+    </script>";
+}
+?>
 
 <style>
         body {

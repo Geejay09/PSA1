@@ -11,10 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock_code = $_POST["stock_code"];
     $item = $_POST["item"];
     $descode = $_POST["descode"];
+    $unit = $_POST['unit'];
 
-    $sql = "INSERT INTO tbl_items (stock_code, item, descode) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO tbl_items (stock_code, item, descode, unit) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $stock_code, $item, $descode);
+    $stmt->bind_param("ssss", $stock_code, $item, $descode, $unit);
 
     if ($stmt->execute()) {
         $showSuccess = true;
@@ -65,6 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="mb-3">
             <label class="form-label">Description</label>
             <input type="text" class="form-control" name="descode" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Unit</label>
+            <input type="text" class="form-control" name="unit" required>
         </div>
         <button type="submit" class="btn btn-add">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">

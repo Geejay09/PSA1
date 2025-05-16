@@ -40,7 +40,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Card - <?= htmlspecialchars($stock_no) ?></title>
+    <title>Stock Ledger Card - <?= htmlspecialchars($stock_no) ?></title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -179,7 +179,7 @@ $conn->close();
                                             <th>Unit</th>
                                             <th>Date</th>
                                             <th>Reference</th>
-                                            <th>Receipt Qty</th> <!-- New Column -->
+                                            <th>Receipt Qty</th>
                                             <th>Issue Qty</th>
                                             <th>Balance Qty</th>
                                             <th>Office</th>

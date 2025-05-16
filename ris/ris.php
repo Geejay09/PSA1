@@ -212,20 +212,7 @@ if (!isset($_SESSION['logged_in'])) {
                                     <td><input type="text" name="stock_no[]" class="form-control stock_no"></td>
                                     <td><input type="text" name="item[]" class="form-control items" readonly></td>
                                     <td><input type="text" name="dscrtn[]" class="form-control descd" readonly></td>
-                                    <td>
-                                        <select name="unit[]" class="form-select" required>
-                                            <option value="" disabled selected>--Select--</option>
-                                            <option value="pc">pc</option>
-                                            <option value="bottle">bottle</option>
-                                            <option value="ream">ream</option>
-                                            <option value="kg">kg</option>
-                                            <option value="liter">liter</option>
-                                            <option value="pack">pack</option>
-                                            <option value="box">box</option>
-                                            <option value="roll">roll</option>
-                                            <option value="pair">pair</option>
-                                        </select>
-                                    </td>
+                                    <td><input type="text" name="unit[]" class="form-control unit" readonly></td>
                                     <td><input type="number" name="qty[]" class="form-control" required></td>
                                     <td><input type="number" name="i_qty[]" class="form-control" required></td>
                                     <td><input type="text" name="remarks[]" class="form-control"></td>
@@ -283,20 +270,7 @@ if (!isset($_SESSION['logged_in'])) {
             <td><input type="text" name="stock_no[]" class="form-control stock_no"></td>
             <td><input type="text" name="item[]" class="form-control items" readonly></td>
             <td><input type="text" name="dscrtn[]" class="form-control descd" readonly></td>
-            <td>
-                <select name="unit[]" class="form-select" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="pc">pc</option>
-                    <option value="bottle">bottle</option>
-                    <option value="ream">ream</option>
-                    <option value="kg">kg</option>
-                    <option value="liter">liter</option>
-                    <option value="pack">pack</option>
-                    <option value="box">box</option>
-                    <option value="roll">roll</option>
-                    <option value="pair">pair</option>
-                </select>
-            </td>
+            <td><input type="text" name="unit[]" class="form-control unit" readonly></td>
             <td><input type="number" name="qty[]" class="form-control" required></td>
             <td><input type="number" name="i_qty[]" class="form-control" required></td>
             <td><input type="text" name="remarks[]" class="form-control"></td>
@@ -311,6 +285,7 @@ if (!isset($_SESSION['logged_in'])) {
         $.get("../get_description.php", { stock_code: stockCode }, function(response) {
             row.find(".items").val(response.item);
             row.find(".descd").val(response.description);
+            row.find(".unit").val(response.unit);
         });
     });
 

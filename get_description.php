@@ -19,14 +19,15 @@ if ($conn->connect_error) {
 
 $response = [];
 
-$stmt = $conn->prepare("SELECT item, descode FROM tbl_items WHERE stock_code = ?");
+$stmt = $conn->prepare("SELECT item, descode, unit FROM tbl_items WHERE stock_code = ?");
 $stmt->bind_param("s", $stock_code);
 $stmt->execute();
 $result = $stmt->get_result();
 if ($row = $result->fetch_assoc()) {
     $response = [
         'item' => $row['item'],
-        'description' => $row['descode']
+        'description' => $row['descode'],
+        'unit' => $row['unit']
     ];
 }
 $stmt->close();

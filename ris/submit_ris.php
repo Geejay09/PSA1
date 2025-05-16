@@ -4,7 +4,7 @@ $user = "root";
 $pass = "";
 $db = "dbpsa";
 
-// Enable error reporting for debugging (optional but recommended during development)
+// Enable error reporting for debugging
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Connect to the database
@@ -46,12 +46,23 @@ for ($i = 0; $i < count($stock_nos); $i++) {
     $stmt->execute();
     $stmt->close();
 
-    // Insert into tbl_sc (without qty or no_days)
+    // Insert into tbl_sc
     $entity = "Philippine Statistics Authority";
     $date = date('Y-m-d');
     $ref = $ris_no;
-    $balance_qty = 0; // placeholder
 
+    // 🔍 Fetch latest balance_qty for the current stock_no
+    $balance_qty = 0;
+    $balStmt = $conn->prepare("SELECT balance_qty FROM tbl_sc WHERE stock_no = ? ORDER BY id DESC LIMIT 1");
+    $balStmt->bind_param("s", $stock_no);
+    $balStmt->execute();
+    $balResult = $balStmt->get_result();
+    if ($balRow = $balResult->fetch_assoc()) {
+        $balance_qty = $balRow['balance_qty']; // Inherit last known balance
+    }
+    $balStmt->close();
+
+    // Insert new entry into tbl_sc with inherited balance
     $stmt2 = $conn->prepare("INSERT INTO tbl_sc (item, dscrtn, unit, stock_no, fund, date, ref, issue_qty, balance_qty, entity, office)
                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt2->bind_param("sssssssiiis", $item, $description, $unit, $stock_no, $fc, $date, $ref, $i_qty, $balance_qty, $entity, $receiver);

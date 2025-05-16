@@ -219,9 +219,13 @@ $conn->close();
     </div>
 </div>
 
-<!-- Floating Help Button -->
+<!-- Floating Button -->
 <button id="helpBtn" class="btn help-btn rounded-circle position-fixed" style="bottom: 20px; right: 20px;">
     <i class="bi bi-question-lg"></i>
+</button>
+
+<button id="bBtn" class="btn help-btn rounded-circle position-fixed" style="bottom: 20px; right: 80px;">
+    <i class="bi bi-exclamation-lg"></i>
 </button>
 
 <script>
@@ -255,7 +259,7 @@ $conn->close();
         { width: 40 }, // B
         { width: 20 }, // C
         { width: 20 }, // D
-        { width: 20 }, // E
+        { width: 27 }, // E
         { width: 20 }, // F
         { width: 15 }, // G
     ];
@@ -336,7 +340,6 @@ $conn->close();
     sheet.getCell(`C${currentRow}`).value = entry.receipt_qty || '';
     sheet.getCell(`D${currentRow}`).value = entry.issue_qty || '';
     sheet.getCell(`E${currentRow}`).value = entry.office || '';
-    sheet.getCell(`F${currentRow}`).value = entry.balance_qty || '';
     sheet.getCell(`G${currentRow}`).value = entry.days_to_consume || '';
 
     // Optional: center-align all except B (left-align)
@@ -419,19 +422,22 @@ $conn->close();
         });
     });
 
-        // Static Balance Forwarded Row (row 9)
         const startRow = 10;
-        const row = sheet.getRow(startRow);
-        row.values = [
-        '01/01/2025',
-        'Balance Forwarded',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        ''
+const row = sheet.getRow(startRow);
+
+// Get the initial balance_qty from your data (assuming it's in itemInfo or rows[0])
+const balance_qty = itemInfo?.initial_balance || rows[0]?.balance_qty || 0; // Fallback to 0 if not found
+
+row.values = [
+    '01/01/2025',
+    'Balance Forwarded',
+    '',
+    '',
+    '',
+    balance_qty, // Now using the actual balance from your data
+    '',
+    '',
+    ''
 ];
 
 // Apply border to each cell in the row
@@ -466,6 +472,18 @@ $conn->close();
             title: 'Need Help?',
             html: `
                 <p>View the full code guide <a href="codes.php" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
+            `,
+            icon: 'info',
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: 'var(--accent-color)'
+        });
+    });
+
+    document.getElementById('bBtn').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Warning',
+            html: `
+                <p>You will redirected to a page where you can change the beginning balance! Click <a href="bal.php" target="_blank" style="color: var(--accent-color); text-decoration: underline;">here</a>.</p>
             `,
             icon: 'info',
             confirmButtonText: 'Got it!',

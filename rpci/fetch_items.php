@@ -8,7 +8,7 @@ if (!isset($_SESSION['logged_in'])) {
 header('Content-Type: application/json');
 
 $conn = new mysqli("localhost", "root", "", "dbpsa");
-$result = $conn->query("SELECT item, descode, stock_code FROM tbl_items WHERE deleted = 0");
+$result = $conn->query("SELECT item, descode, stock_code, unit FROM tbl_items WHERE deleted = 0");
 $items = $result->fetch_all(MYSQLI_ASSOC);
 
 echo json_encode($items);

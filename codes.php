@@ -33,6 +33,7 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
             <th>Stock Code</th>
             <th>Item</th>
             <th>Description</th>
+            <th style="width: 70px;">unit</th>
             <th style="width: 60px;">Action</th>
         </tr>
     </thead>
@@ -42,6 +43,7 @@ $result = $conn->query("SELECT * FROM tbl_items WHERE deleted = 0");
             <td><?= htmlspecialchars($row['stock_code']) ?></td>
             <td><?= htmlspecialchars($row['item']) ?></td>
             <td><?= htmlspecialchars($row['descode']) ?></td>
+            <td><?= htmlspecialchars($row['unit']) ?></td>
             <td>
                 <a href="edit_item.php?id=<?= $row['id'] ?>"><i class="fa fa-pen"></i></a>
                 <i class="fa fa-trash" onclick="softDelete(<?= $row['id'] ?>)"></i>
